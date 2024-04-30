@@ -24,6 +24,8 @@ public class Kitchen implements Scene {
    private Stage stage;
    private TextButton button;
    private ImageButton imageButton;
+   private SpriteBatch deskSprite;
+   private Texture deskTexture;
 
    public Kitchen(){
        create();
@@ -33,7 +35,7 @@ public class Kitchen implements Scene {
        Skin skin = new Skin(Gdx.files.internal("buttons/glassy-ui.json"));
        button=new TextButton("Vibrate",skin);
        button.setSize(400,200);
-       button.setPosition(300,1500);
+       button.setPosition(300,2000);
        button.addListener(new InputListener(){
            @Override
            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -65,16 +67,19 @@ public class Kitchen implements Scene {
                super.touchUp(event, x, y, pointer, button);
            }
        });
-       stage.addActor(imageButton);
+       //stage.addActor(imageButton);
    }
     @Override
     public void create() {
         batch = new SpriteBatch();
-        img = new Texture("Scenes/Kitchen.jpg");
+        img = new Texture("Scenes/Kitchen/Kitchen.jpg");
         sport_sprite = new SpriteBatch();
         sport_texture = new Texture("sportik.png");
         music= Gdx.audio.newMusic(Gdx.files.internal("Music/Kitchen_music.mp3"));
         music.setLooping(true);
+
+        deskSprite = new SpriteBatch();
+        deskTexture = new Texture("Scenes/Kitchen/desk.png");
         init_buttons();
     }
 
@@ -89,8 +94,13 @@ public class Kitchen implements Scene {
         batch.draw(img,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         batch.end();
         sport_sprite.begin();
-        sport_sprite.draw(sport_texture,280,20);
+        sport_sprite.draw(sport_texture,280,70);
         sport_sprite.end();
+
+        deskSprite.begin();
+
+        deskSprite.draw(deskTexture,0,400,Gdx.graphics.getWidth(),600);
+        deskSprite.end();
         stage.act();
         stage.draw();
     }
