@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.AudioRecorder;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,11 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Scene;
+
 
 public class Kitchen implements Scene {
 
@@ -27,8 +29,15 @@ public class Kitchen implements Scene {
    private SpriteBatch deskSprite;
    private Texture deskTexture;
 
+   ScrollTest scrollTest = new ScrollTest();
+   private ScrollPane scrollFoodPanel;
+
    public Kitchen(){
        create();
+   }
+
+   private void InitScrollPanel(){
+
    }
 
    private void init_buttons(){
@@ -56,6 +65,7 @@ public class Kitchen implements Scene {
        imageButton.setSize(600,300);
        imageButton.setPosition(300,500);
        imageButton.getImage().setFillParent(true);
+
        imageButton.addListener(new InputListener(){
            @Override
            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -94,15 +104,17 @@ public class Kitchen implements Scene {
         batch.draw(img,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         batch.end();
         sport_sprite.begin();
-        sport_sprite.draw(sport_texture,280,70);
+        sport_sprite.draw(sport_texture,240,250);
         sport_sprite.end();
 
         deskSprite.begin();
 
-        deskSprite.draw(deskTexture,0,400,Gdx.graphics.getWidth(),600);
+        deskSprite.draw(deskTexture,0,50,Gdx.graphics.getWidth(),800);
         deskSprite.end();
         stage.act();
         stage.draw();
+
+        scrollTest.render();
     }
 
     @Override
