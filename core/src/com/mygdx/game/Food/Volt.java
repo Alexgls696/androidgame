@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Volt extends Food{
     public Volt(){
-        texture = new Texture(Gdx.files.internal("Food/Volt.png"));
+        path = "Food/Volt.png";
+        texture = new Texture(Gdx.files.internal(path));
         healthBonus=5;
         sleepBonus=-10;
         cost = 69;
+        name="Volt";
     }
 }

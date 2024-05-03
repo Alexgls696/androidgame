@@ -1,0 +1,40 @@
+close.png
+size: 1011, 1093
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+eat
+  rotate: true
+  xy: 1, 265
+  size: 270, 733
+  orig: 270, 733
+  offset: 0, 0
+  index: 0
+eat
+  rotate: true
+  xy: 1, 1
+  size: 262, 734
+  orig: 262, 734
+  offset: 0, 0
+  index: 1
+eat
+  rotate: false
+  xy: 737, 1
+  size: 273, 729
+  orig: 273, 729
+  offset: 0, 0
+  index: 2
+eat
+  rotate: true
+  xy: 1, 815
+  size: 277, 730
+  orig: 277, 730
+  offset: 0, 0
+  index: 3
+eat
+  rotate: true
+  xy: 1, 537
+  size: 276, 730
+  orig: 276, 730
+  offset: 0, 0
+  index: 4

@@ -12,6 +12,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		scene.draw();
+		scene.action();
 	}
 
 	@Override
