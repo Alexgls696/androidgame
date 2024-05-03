@@ -7,7 +7,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Scene scene;
 	@Override
 	public void create() {
-		scene = new Kitchen();
+		scene = new Room();
 	}
 	@Override
 	public void render () {
