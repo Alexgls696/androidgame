@@ -21,13 +21,13 @@ import java.util.HashMap;
 import com.mygdx.game.Food.Food;
 import org.w3c.dom.Text;
 
-public class Store implements Scene {
+public class Store {
     private SpriteBatch backgroundSprite;
     private Texture backgroundTexture;
     BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
     private HashMap<String, Food> food = null;
     private Table foodTable;
-    private Stage stage;
+
     private SpriteBatch blurSprite;
     private Texture blurTexture;
     private SpriteBatch buyBackgroundSprite;
@@ -38,28 +38,28 @@ public class Store implements Scene {
 
     private ImageButton okImageButton;
     private ImageButton noImageButton;
+    private ImageButton backImageButton;
     String buyingName;
-
     private float rectX = Gdx.graphics.getWidth() / 10.5f;
     private float rectY = Gdx.graphics.getHeight() / 6;
     private float rectWidth = Gdx.graphics.getWidth() / 1.2f;
-    private float rectHeight = Gdx.graphics.getHeight() / 1.5f;
+    private float rectHeight = Gdx.graphics.getHeight() / 1.3f;
     private float plateX = rectX + rectWidth / 3;
     private float plateY = rectY + rectHeight / 1.8f;
     private float plateWidth = rectWidth / 3;
     private float plateHeight = rectWidth / 3;
+    private Stage stage;
 
     public Store(HashMap<String, Food> foodHashMap) {
-        create();
+
         food = foodHashMap;
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        stage = Kitchen.storeStage;
+        create();
         FoodTableInit();
         font.setColor(Color.WHITE);
         font.getData().setScale(1.5f, 1.5f);
     }
 
-    @Override
     public void create() {
         backgroundTexture = new Texture(Gdx.files.internal("Scenes/Store/background.png"));
         backgroundSprite = new SpriteBatch();
@@ -75,8 +75,22 @@ public class Store implements Scene {
 
         okImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/ok.png")),
                 new TextureRegionDrawable(new Texture("Scenes/Store/ok.png")));
-        noImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/no.png")),
-                new TextureRegionDrawable(new Texture("Scenes/Store/no.png")));
+        noImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
+                new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
+
+        //Инициализация кнопки назад
+        backImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
+                new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
+        backImageButton.setSize(200, 200);
+        backImageButton.setPosition(50,Gdx.graphics.getHeight()-backImageButton.getHeight()-50);
+        backImageButton.getImage().setFillParent(true);
+        backImageButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closed=true;
+            }
+        });
+        stage.addActor(backImageButton);
     }
 
     private void FoodTableInit() {
@@ -114,7 +128,7 @@ public class Store implements Scene {
     private Stage buyingStage;
     private boolean firstShowBuyWindow = true;
 
-    private void InitButtons() //Инициализация и обработка действий кнопок.
+    private void InitButtons() //Инициализация и обработка действий кнопок при покупке
     {
         okImageButton.setSize(rectWidth/4, rectWidth/4);
         okImageButton.setPosition(rectX+rectWidth-okImageButton.getWidth()-50, rectY+50);
@@ -140,8 +154,12 @@ public class Store implements Scene {
                 if(MyGdxGame.user_money- current_food.cost<0){
                     System.out.println("Недостаточно денег");
                 }else{
-                    System.out.println("Успешная покупка");
+                    current_food.count++;
+                    food.remove(buyingName);
+                    food.put(buyingName,current_food);
                     MyGdxGame.user_money-= current_food.cost;
+                    System.out.println("Успешная покупка");
+                    added=true;
                 }
             }
         });
@@ -149,7 +167,8 @@ public class Store implements Scene {
         buyingStage.addActor(noImageButton);
     }
 
-    private void buyingWindowInit() {
+    private void buyingWindowInit()  //Инициализация окна покупки
+    {
         buyingStage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(buyingStage);
         labelsTable = new Table();
@@ -169,12 +188,14 @@ public class Store implements Scene {
         Label healthLabel = new Label("Бонус к здоровью: " + healthBonus, style);
         Label musclesLabel = new Label("Бонус к мышечной массе: " + muscleBonus, style);
         Label sleepLabel = new Label("Показатель сонливости: " + sleepBonus, style);
+        Label questionLabel = new Label("Купить? ",style);
 
         labelsTable.add(nameLabel).spaceBottom(100).row();
         labelsTable.add(costLabel).spaceBottom(100).row();
         labelsTable.add(healthLabel).spaceBottom(100).row();
         labelsTable.add(musclesLabel).spaceBottom(100).row();
         labelsTable.add(sleepLabel).spaceBottom(100).row();
+        labelsTable.add(questionLabel).spaceBottom(100).row();
         labelsTable.setFillParent(true);
 
         buyingStage.addActor(labelsTable);
@@ -202,7 +223,6 @@ public class Store implements Scene {
         buyingStage.draw();
     }
 
-    @Override
     public void draw() {
         if (buyWindowFlag) {
             drawBuyWindow();
@@ -215,7 +235,6 @@ public class Store implements Scene {
         }
     }
 
-    @Override
     public void dispose() {
         stage.dispose();
         buyingFoodSprite.dispose();
@@ -223,8 +242,16 @@ public class Store implements Scene {
         blurSprite.dispose();
     }
 
-    @Override
-    public void action() {
-
+    private boolean closed = false;
+    private boolean added = false;
+    public boolean isClosed(){
+        boolean tmp_closed = closed;
+        closed=false;
+        return tmp_closed;
+    }
+    public boolean isAdded(){
+        boolean tmp_added = added;
+        added=false;
+        return tmp_added;
     }
 }

@@ -4,14 +4,12 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.game.Food.Food;
-
 import java.util.HashMap;
-
 
 public class MyGdxGame extends ApplicationAdapter {
 	public static int health = 100;
 	private Scene scene;
-	public static int user_money = 250;
+	public static int user_money = 500;
 	public static HashMap<String, Food> food = new HashMap<>();
 	private void FoodInit(){
 		FileHandle file = Gdx.files.internal("Food/FoodList.txt");
@@ -32,7 +30,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 		FoodInit();
-		scene = new Store(food);
+		scene = new Kitchen(food);
 	}
 	@Override
 	public void render () {

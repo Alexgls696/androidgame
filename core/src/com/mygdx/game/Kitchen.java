@@ -25,19 +25,19 @@ public class Kitchen implements Scene {
     private Texture backTexture;
     private Music music;
     Sound eatSound;
-    private Stage stage;
+    public static Stage stage;
     private SpriteBatch deskSprite;
     private SpriteBatch chairSprite;
     private Texture chairTexture;
     private Texture deskTexture;
     private ScrollPane scroller;
     private HashMap<String, Food> hashFoodMap = null;
-    public static HashMap<String,Food>availableFood = null;
+    public static HashMap<String, Food> availableFood = null;
     private Texture movableFoodTexture;
     private SpriteBatch movableFoodSprite;
     Vector2 sportikSize;
     private Rectangle eatRectangle;
-    private final int sportikX = Gdx.graphics.getWidth()/4;
+    private final int sportikX = Gdx.graphics.getWidth() / 4;
     private final int sportikY = 250;
     private SpriteBatch sport_sprite;
     private Texture sport_texture;
@@ -56,16 +56,21 @@ public class Kitchen implements Scene {
     private boolean noAnimation = true;
     private boolean mouthOpeningAnimationFlag = false;
     private boolean eatingAnimationFlag = false;
+    private ImageButton storeButton;
+    private Store store;
+    public static Stage storeStage;
+    boolean storeFlag = false;
 
-    public Kitchen(HashMap<String, Food>foodHashMap) {
-        this.hashFoodMap=foodHashMap;
+    public Kitchen(HashMap<String, Food> foodHashMap) {
+        this.hashFoodMap = foodHashMap;
         stage = new Stage(new ScreenViewport());
+        storeStage = new Stage(new ScreenViewport());
+        store = new Store(foodHashMap);
         Gdx.input.setInputProcessor(stage);
         create(); //Загрузка текстур
         init_buttons(); //Загрузка кнопок
         InitScrollPanel();
         InitSprites();
-
         sportikSize = new Vector2(500, Gdx.graphics.getHeight() / 2 + 100);
         eatRectangle = new Rectangle();
         eatRectangle.width = sportikSize.x / 2;
@@ -85,10 +90,11 @@ public class Kitchen implements Scene {
         deskTexture = new Texture("Scenes/Kitchen/desk.png");
 
         chairSprite = new SpriteBatch();
-        chairTexture=new Texture(Gdx.files.internal("Scenes/Kitchen/chair.png"));
+        chairTexture = new Texture(Gdx.files.internal("Scenes/Kitchen/chair.png"));
 
         eatSound = Gdx.audio.newSound(Gdx.files.internal("Sound/am.mp3"));
         music = Gdx.audio.newMusic(Gdx.files.internal("Music/Kitchen_music.mp3"));
+
         music.setLooping(true);
         music.setVolume(50);
     }
@@ -111,9 +117,12 @@ public class Kitchen implements Scene {
     {
         Table scrollTable = new Table();
         for (Object it : hashFoodMap.values()) {
-            Image image = new Image(((Food) it).texture);
-            image.setName(((Food) it).name);
-            scrollTable.add(image).width(200).height(200).pad(25); //pad - расстояние между элементами
+            Food food = (Food) it;
+            if (food.count > 0) {
+                Image image = new Image(food.texture);
+                image.setName(food.name);
+                scrollTable.add(image).width(200).height(200).pad(25); //pad - расстояние между элементами
+            }
         }
         scrollTable.setTouchable(Touchable.enabled);
         scrollTable.addListener(new ClickListener() //обработка нажатий на элемент таблицы (еда)
@@ -135,26 +144,22 @@ public class Kitchen implements Scene {
         finalTable.setSize(Gdx.graphics.getWidth(), 400);
         finalTable.setPosition(0, 690);
         finalTable.add(scroller).fill().expand();
+        finalTable.setName("scroll_table");
         stage.addActor(finalTable);
     }
 
     private void init_buttons() {
-        ImageButton imageButton = new ImageButton(new TextureRegionDrawable(new Texture("Default.png")), new TextureRegionDrawable(new Texture("Hover.png")));
-        imageButton.setSize(600, 300);
-        imageButton.setPosition(300, 500);
-        imageButton.getImage().setFillParent(true);
-        imageButton.addListener(new InputListener() {
+        storeButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Kitchen/store.png")), new TextureRegionDrawable(new Texture("Scenes/Kitchen/store.png")));
+        storeButton.setSize(200, 200);
+        storeButton.setPosition(Gdx.graphics.getWidth() - storeButton.getWidth() - 50, Gdx.graphics.getHeight() - storeButton.getHeight() - 50);
+        storeButton.getImage().setFillParent(true);
+        storeButton.addListener(new ClickListener() {
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
+            public void clicked(InputEvent event, float x, float y) {
+                storeFlag = true;
             }
         });
-        //stage.addActor(imageButton);
+        stage.addActor(storeButton);
     }
 
 
@@ -171,8 +176,8 @@ public class Kitchen implements Scene {
                 mouthOpeningAnimationFlag = true;
             } else {
                 noAnimation = true;
-                eatingAnimationFlag=false;
-                eatingStateTime=0;
+                eatingAnimationFlag = false;
+                eatingStateTime = 0;
                 mouthOpenStateTime = 0;
                 mouthOpeningAnimationFlag = false;
             }
@@ -183,16 +188,16 @@ public class Kitchen implements Scene {
 
             if (eatRectangle.contains(x, y)) {
                 mouthOpeningAnimationFlag = false;
-                noAnimation=false;
+                noAnimation = false;
                 eatingAnimationFlag = true;
                 mouthOpenStateTime = 0;
                 new Thread(() -> {
                     eatSound.play();
                 }).start();
 
-            }else{
+            } else {
                 mouthOpeningAnimationFlag = false;
-                noAnimation=true;
+                noAnimation = true;
             }
             movableFoodTexture = null;
         }
@@ -225,9 +230,10 @@ public class Kitchen implements Scene {
             eatingSprite.setSize(sportikSize.x, sportikSize.y);
             eatingSprite.draw(eatingSpriteBatch);
             eatingSpriteBatch.end();
-
         }
     }
+
+    private boolean setActiveToStore = true;
 
     @Override
     public void draw() {
@@ -235,21 +241,45 @@ public class Kitchen implements Scene {
             music_flag = false;
             // music.play();
         }
-        backSprite.begin();
-        backSprite.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        backSprite.end();
+        if (storeFlag) {
+            if (setActiveToStore) {
+                Gdx.input.setInputProcessor(storeStage);
+                setActiveToStore = false;
+            }
+            store.draw();
+            if (store.isClosed()) {
+                storeFlag = false;
+                Gdx.input.setInputProcessor(stage);
+                setActiveToStore = true;
+                if (store.isAdded()) {
+                    for (Actor actor : stage.getActors()) {
+                        String name = actor.getName();
+                        if (name != null && name.equals("scroll_table")) {
+                            int index = stage.getActors().indexOf(actor, false);
+                            stage.getActors().removeIndex(index);
+                            break;
+                        }
+                    }
+                    InitScrollPanel();
+                }
+            }
+        } else {
+            backSprite.begin();
+            backSprite.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            backSprite.end();
 
-        chairSprite.begin();
-        chairSprite.draw(chairTexture,Gdx.graphics.getWidth()/2-chairTexture.getWidth(),250,Gdx.graphics.getWidth()/2,1200);
-        chairSprite.end();
-        sportikDraw();
+            chairSprite.begin();
+            chairSprite.draw(chairTexture, Gdx.graphics.getWidth() / 2 - chairTexture.getWidth(), 250, Gdx.graphics.getWidth() / 2, 1200);
+            chairSprite.end();
+            sportikDraw();
 
-        deskSprite.begin();
-        deskSprite.draw(deskTexture, -50, 50, Gdx.graphics.getWidth() + 100, 800);
-        deskSprite.end();
+            deskSprite.begin();
+            deskSprite.draw(deskTexture, -50, 50, Gdx.graphics.getWidth() + 100, 800);
+            deskSprite.end();
 
-        stage.act(); //Еда
-        stage.draw();
+            stage.act(); //Еда
+            stage.draw();
+        }
     }
 
     @Override
@@ -264,6 +294,7 @@ public class Kitchen implements Scene {
         mouthCloseTextureAtlas.dispose();
         mouthCloseSpriteBatch.dispose();
         mouthOpenSpriteBatch.dispose();
+        store.dispose();
     }
 
     @Override
