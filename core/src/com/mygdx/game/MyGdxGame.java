@@ -38,6 +38,22 @@ public class MyGdxGame extends ApplicationAdapter {
 		scene.action();
 	}
 
+
+	private void saveChanges(){
+		new Thread(()->{
+			FileHandle handle = new FileHandle("Food/FoodList.txt");
+			StringBuffer tmp = new StringBuffer();
+			for(Food food:food.values()){
+				tmp.append(food.name+" "+"cost="+food.cost
+						+" healthBonus="+food.healthBonus
+						+" sleepBonus="+food.sleepBonus
+						+" musclesBonus="+food.musclesBonus
+						+" count="+food.count
+						+food.path+"\n");
+			}
+			handle.writeString(tmp.toString(),false);
+		}).start();
+	}
 	@Override
 	public void dispose () {
 		scene.dispose();

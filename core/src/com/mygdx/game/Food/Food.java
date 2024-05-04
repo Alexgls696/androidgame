@@ -17,6 +17,7 @@ public class Food{
     }
     public Food(String name,int cost, int health, int sleep, int muscles, int count,String path){
         this.name=name;
+        this.path=path;
         texture = new Texture("Food/"+path);
         healthBonus=health;
         sleepBonus=sleep;

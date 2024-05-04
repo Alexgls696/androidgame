@@ -4,11 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -35,6 +33,7 @@ public class Kitchen implements Scene {
     public static HashMap<String, Food> availableFood = null;
     private Texture movableFoodTexture;
     private SpriteBatch movableFoodSprite;
+    private String movableFoodName;
     Vector2 sportikSize;
     private Rectangle eatRectangle;
     private final int sportikX = Gdx.graphics.getWidth() / 4;
@@ -60,7 +59,7 @@ public class Kitchen implements Scene {
     private Store store;
     public static Stage storeStage;
     boolean storeFlag = false;
-
+    BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
     public Kitchen(HashMap<String, Food> foodHashMap) {
         this.hashFoodMap = foodHashMap;
         stage = new Stage(new ScreenViewport());
@@ -69,14 +68,17 @@ public class Kitchen implements Scene {
         Gdx.input.setInputProcessor(stage);
         create(); //Загрузка текстур
         init_buttons(); //Загрузка кнопок
-        InitScrollPanel();
-        InitSprites();
+        InitScrollPanel(); //Создание и пересоздание панели прокрутки еды
+        InitSprites(); //Загрузка текстур
         sportikSize = new Vector2(500, Gdx.graphics.getHeight() / 2 + 100);
         eatRectangle = new Rectangle();
         eatRectangle.width = sportikSize.x / 2;
         eatRectangle.height = 300;
         eatRectangle.x = sportikX + sportikSize.x / 4;
         eatRectangle.y = sportikY + sportikSize.y - 350;
+
+        font.getData().setScale(1.5f, 1.5f);
+        font.setColor(Color.YELLOW);
     }
 
     @Override
@@ -88,6 +90,8 @@ public class Kitchen implements Scene {
 
         deskSprite = new SpriteBatch();
         deskTexture = new Texture("Scenes/Kitchen/desk.png");
+
+        movableFoodSprite = new SpriteBatch();
 
         chairSprite = new SpriteBatch();
         chairTexture = new Texture(Gdx.files.internal("Scenes/Kitchen/chair.png"));
@@ -124,6 +128,16 @@ public class Kitchen implements Scene {
                 scrollTable.add(image).width(200).height(200).pad(25); //pad - расстояние между элементами
             }
         }
+        scrollTable.add().row();
+        for (Object it : hashFoodMap.values()) {
+            Food food = (Food) it;
+            if (food.count > 0) {
+                Label.LabelStyle style = new Label.LabelStyle();
+                style.font = font;
+                Label label = new Label(String.valueOf(food.count), style);
+                scrollTable.add(label);
+            }
+        }
         scrollTable.setTouchable(Touchable.enabled);
         scrollTable.addListener(new ClickListener() //обработка нажатий на элемент таблицы (еда)
         {
@@ -133,7 +147,7 @@ public class Kitchen implements Scene {
                 String name = actor.getName();
                 if (name != null) {
                     movableFoodTexture = hashFoodMap.get(name).texture;
-                    movableFoodSprite = new SpriteBatch();
+                    movableFoodName = name;
                     return true;
                 }
                 return false;
@@ -163,6 +177,19 @@ public class Kitchen implements Scene {
     }
 
 
+    private void DecreaseFood() {
+        hashFoodMap.get(movableFoodName).count--;
+        for (Actor actor : stage.getActors()) {
+            String name = actor.getName();
+            if (name != null && name.equals("scroll_table")) {
+                int index = stage.getActors().indexOf(actor, false);
+                stage.getActors().removeIndex(index);
+                break;
+            }
+        }
+        InitScrollPanel();
+    }
+
     public void checkMovableFood() {
         if (movableFoodTexture != null) {
             movableFoodSprite.begin();
@@ -191,6 +218,7 @@ public class Kitchen implements Scene {
                 noAnimation = false;
                 eatingAnimationFlag = true;
                 mouthOpenStateTime = 0;
+                DecreaseFood();
                 new Thread(() -> {
                     eatSound.play();
                 }).start();

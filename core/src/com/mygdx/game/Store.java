@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -19,12 +20,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.HashMap;
 
 import com.mygdx.game.Food.Food;
-import org.w3c.dom.Text;
 
 public class Store {
     private SpriteBatch backgroundSprite;
     private Texture backgroundTexture;
     BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
+    BitmapFont statusFont = new BitmapFont(Gdx.files.internal("font.fnt"));
     private HashMap<String, Food> food = null;
     private Table foodTable;
 
@@ -49,18 +50,24 @@ public class Store {
     private float plateWidth = rectWidth / 3;
     private float plateHeight = rectWidth / 3;
     private Stage stage;
-
+    private SpriteBatch statusSprite;
+    private String statusLine = "";
+    private SpriteBatch yourCountSprite;
+    long timer; //Для отсеивания лишних нажатий
     public Store(HashMap<String, Food> foodHashMap) {
-
+        timer=System.currentTimeMillis();
         food = foodHashMap;
         stage = Kitchen.storeStage;
         create();
         FoodTableInit();
         font.setColor(Color.WHITE);
         font.getData().setScale(1.5f, 1.5f);
+        statusFont.getData().setScale(1.5f,1.5f);
     }
 
     public void create() {
+        statusSprite = new SpriteBatch();
+        yourCountSprite = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("Scenes/Store/background.png"));
         backgroundSprite = new SpriteBatch();
 
@@ -127,7 +134,6 @@ public class Store {
     private Table labelsTable = new Table();
     private Stage buyingStage;
     private boolean firstShowBuyWindow = true;
-
     private void InitButtons() //Инициализация и обработка действий кнопок при покупке
     {
         okImageButton.setSize(rectWidth/4, rectWidth/4);
@@ -144,22 +150,29 @@ public class Store {
                 buyingStage.dispose();
                 labelsTable.getCells().clear();
                 Gdx.input.setInputProcessor(stage);
+                statusLine="";
             }
         });
 
         okImageButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Food current_food = food.get(buyingName);
-                if(MyGdxGame.user_money- current_food.cost<0){
-                    System.out.println("Недостаточно денег");
-                }else{
-                    current_food.count++;
-                    food.remove(buyingName);
-                    food.put(buyingName,current_food);
-                    MyGdxGame.user_money-= current_food.cost;
-                    System.out.println("Успешная покупка");
-                    added=true;
+                long current_time = System.currentTimeMillis();
+                if(current_time-timer>500) {
+                    timer = System.currentTimeMillis();
+                    Food current_food = food.get(buyingName);
+                    if (MyGdxGame.user_money - current_food.cost < 0) {
+                        statusLine = "Недостаточно денег";
+                        statusFont.setColor(Color.RED);
+                    } else {
+                        current_food.count++;
+                        food.remove(buyingName);
+                        food.put(buyingName, current_food);
+                        MyGdxGame.user_money -= current_food.cost;
+                        statusLine = "Успешная покупка";
+                        statusFont.setColor(Color.GREEN);
+                        added = true;
+                    }
                 }
             }
         });
@@ -189,20 +202,19 @@ public class Store {
         Label musclesLabel = new Label("Бонус к мышечной массе: " + muscleBonus, style);
         Label sleepLabel = new Label("Показатель сонливости: " + sleepBonus, style);
         Label questionLabel = new Label("Купить? ",style);
-
-        labelsTable.add(nameLabel).spaceBottom(100).row();
-        labelsTable.add(costLabel).spaceBottom(100).row();
-        labelsTable.add(healthLabel).spaceBottom(100).row();
-        labelsTable.add(musclesLabel).spaceBottom(100).row();
-        labelsTable.add(sleepLabel).spaceBottom(100).row();
-        labelsTable.add(questionLabel).spaceBottom(100).row();
+        int pad = 50;
+        labelsTable.add(nameLabel).spaceBottom(pad).row();
+        labelsTable.add(costLabel).spaceBottom(pad).row();
+        labelsTable.add(healthLabel).spaceBottom(pad).row();
+        labelsTable.add(musclesLabel).spaceBottom(pad).row();
+        labelsTable.add(sleepLabel).spaceBottom(200).row();
+        labelsTable.add(questionLabel).spaceBottom(pad).row();
         labelsTable.setFillParent(true);
 
         buyingStage.addActor(labelsTable);
     }
 
     private void drawBuyWindow() {
-
         blurSprite.begin();
         blurSprite.draw(blurTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         blurSprite.end();
@@ -221,6 +233,14 @@ public class Store {
 
         buyingStage.act();
         buyingStage.draw();
+
+        statusSprite.begin();
+        statusFont.draw(statusSprite,statusLine,rectX+rectWidth/4,rectY-100);
+        statusSprite.end();
+
+        yourCountSprite.begin();
+        font.draw(yourCountSprite,"У вас этих предметов: "+food.get(buyingName).count,rectX+rectWidth/6,rectY-50);
+        yourCountSprite.end();
     }
 
     public void draw() {
