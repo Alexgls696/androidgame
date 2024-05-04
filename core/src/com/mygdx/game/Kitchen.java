@@ -23,28 +23,46 @@ import java.util.HashMap;
 public class Kitchen implements Scene {
     private SpriteBatch backSprite;
     private Texture backTexture;
-    private SpriteBatch sport_sprite;
-    private Texture sport_texture;
     private Music music;
     Sound eatSound;
     private Stage stage;
     private SpriteBatch deskSprite;
+    private SpriteBatch chairSprite;
+    private Texture chairTexture;
     private Texture deskTexture;
     private ScrollPane scroller;
-    private HashMap<String, Food> hashFoodMap = new HashMap<>();
+    private HashMap<String, Food> hashFoodMap = null;
+    public static HashMap<String,Food>availableFood = null;
     private Texture movableFoodTexture;
     private SpriteBatch movableFoodSprite;
-    private Rectangle eatRectangle;
-    private final int sportikX = 300;
-    private final int sportikY = 250;
     Vector2 sportikSize;
+    private Rectangle eatRectangle;
+    private final int sportikX = Gdx.graphics.getWidth()/4;
+    private final int sportikY = 250;
+    private SpriteBatch sport_sprite;
+    private Texture sport_texture;
+    SpriteBatch mouthOpenSpriteBatch;
+    TextureAtlas mouthOpenTextureAtlas;
+    Animation<Sprite> mouthOpenAnimation;
+    float mouthOpenStateTime = 0;
+    SpriteBatch mouthCloseSpriteBatch;
+    TextureAtlas mouthCloseTextureAtlas;
+    Animation<Sprite> mouthCloseAnimation;
+    float mouthCloseStateTime = 0;
+    SpriteBatch eatingSpriteBatch;
+    TextureAtlas eatingTextureAtlas;
+    Animation<Sprite> eatingAnimation;
+    float eatingStateTime = 0;
+    private boolean noAnimation = true;
+    private boolean mouthOpeningAnimationFlag = false;
+    private boolean eatingAnimationFlag = false;
 
-    public Kitchen() {
+    public Kitchen(HashMap<String, Food>foodHashMap) {
+        this.hashFoodMap=foodHashMap;
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         create(); //Загрузка текстур
         init_buttons(); //Загрузка кнопок
-        FoodInit();
         InitScrollPanel();
         InitSprites();
 
@@ -56,24 +74,24 @@ public class Kitchen implements Scene {
         eatRectangle.y = sportikY + sportikSize.y - 350;
     }
 
+    @Override
+    public void create() {
+        backSprite = new SpriteBatch();
+        backTexture = new Texture("Scenes/Kitchen/Kitchen.jpg");
+        sport_sprite = new SpriteBatch();
+        sport_texture = new Texture("Scenes/Kitchen/sportik.png");
 
-    SpriteBatch mouthOpenSpriteBatch;
-    TextureAtlas mouthOpenTextureAtlas;
-    Animation<Sprite> mouthOpenAnimation;
-    float mouthOpenStateTime = 0;
-    SpriteBatch mouthCloseSpriteBatch;
-    TextureAtlas mouthCloseTextureAtlas;
-    Animation<Sprite> mouthCloseAnimation;
-    float mouthCloseStateTime = 0;
+        deskSprite = new SpriteBatch();
+        deskTexture = new Texture("Scenes/Kitchen/desk.png");
 
-    SpriteBatch eatingSpriteBatch;
-    TextureAtlas eatingTextureAtlas;
-    Animation<Sprite> eatingAnimation;
-    float eatingStateTime = 0;
-    private boolean noAnimation = true;
-    private boolean mouthOpeningAnimationFlag = false;
-    private boolean eatingAnimationFlag = false;
+        chairSprite = new SpriteBatch();
+        chairTexture=new Texture(Gdx.files.internal("Scenes/Kitchen/chair.png"));
 
+        eatSound = Gdx.audio.newSound(Gdx.files.internal("Sound/am.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Kitchen_music.mp3"));
+        music.setLooping(true);
+        music.setVolume(50);
+    }
 
     private void InitSprites() {
         mouthOpenSpriteBatch = new SpriteBatch();
@@ -87,31 +105,6 @@ public class Kitchen implements Scene {
         eatingSpriteBatch = new SpriteBatch();
         eatingTextureAtlas = new TextureAtlas("Sprites/Eating/eat.txt");
         eatingAnimation = new Animation<>(0.1f, eatingTextureAtlas.createSprites("eat"));
-    }
-
-    @Override
-    public void create() {
-        backSprite = new SpriteBatch();
-        backTexture = new Texture("Scenes/Kitchen/Kitchen.jpg");
-        sport_sprite = new SpriteBatch();
-        sport_texture = new Texture("sportik.png");
-
-        deskSprite = new SpriteBatch();
-        deskTexture = new Texture("Scenes/Kitchen/desk.png");
-        eatSound = Gdx.audio.newSound(Gdx.files.internal("Sound/am.mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Kitchen_music.mp3"));
-        music.setLooping(true);
-        music.setVolume(50);
-    }
-
-
-    private void FoodInit() {
-        FileHandle file = Gdx.files.internal("Food/FoodList.txt");
-        String scanLine = file.readString();
-        String[] food_list = scanLine.split("\r\n");
-        for (String it : food_list) {
-            hashFoodMap.put(it, Food.CreateFood(it));
-        }
     }
 
     private void InitScrollPanel() //Создание прокручиваемой таблицы и логика перетаскивания
@@ -246,6 +239,9 @@ public class Kitchen implements Scene {
         backSprite.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backSprite.end();
 
+        chairSprite.begin();
+        chairSprite.draw(chairTexture,Gdx.graphics.getWidth()/2-chairTexture.getWidth(),250,Gdx.graphics.getWidth()/2,1200);
+        chairSprite.end();
         sportikDraw();
 
         deskSprite.begin();
