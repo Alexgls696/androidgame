@@ -34,10 +34,8 @@ public class Kitchen implements Scene {
     private Texture movableFoodTexture;
     private SpriteBatch movableFoodSprite;
     private String movableFoodName;
-    Vector2 sportikSize;
+    Vector2 sportikSize; //размер гг
     private Rectangle eatRectangle;
-    private final int sportikX = Gdx.graphics.getWidth() / 4;
-    private final int sportikY = 250;
     private SpriteBatch sport_sprite;
     private Texture sport_texture;
     SpriteBatch mouthOpenSpriteBatch;
@@ -60,6 +58,12 @@ public class Kitchen implements Scene {
     public static Stage storeStage;
     boolean storeFlag = false;
     BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
+    private float chairX = Gdx.graphics.getWidth() / 4;
+    private float chairY = 250;
+    private float chairWidth = Gdx.graphics.getWidth() / 2;
+    private float chairHeight = Gdx.graphics.getHeight()/2;
+    private  int sportikX;
+    private  int sportikY;
     public Kitchen(HashMap<String, Food> foodHashMap) {
         this.hashFoodMap = foodHashMap;
         stage = new Stage(new ScreenViewport());
@@ -70,10 +74,15 @@ public class Kitchen implements Scene {
         init_buttons(); //Загрузка кнопок
         InitScrollPanel(); //Создание и пересоздание панели прокрутки еды
         InitSprites(); //Загрузка текстур
-        sportikSize = new Vector2(500, Gdx.graphics.getHeight() / 2 + 100);
+
+        sportikSize = new Vector2(chairWidth-50, chairHeight+200);
+
         eatRectangle = new Rectangle();
         eatRectangle.width = sportikSize.x / 2;
         eatRectangle.height = 300;
+
+        sportikX = (int)(chairX);
+        sportikY = (int)chairY;
         eatRectangle.x = sportikX + sportikSize.x / 4;
         eatRectangle.y = sportikY + sportikSize.y - 350;
 
@@ -275,7 +284,6 @@ public class Kitchen implements Scene {
     }
 
     private boolean setActiveToStore = true;
-
     @Override
     public void draw() {
         if (music_flag) {
@@ -310,7 +318,7 @@ public class Kitchen implements Scene {
             backSprite.end();
 
             chairSprite.begin();
-            chairSprite.draw(chairTexture, Gdx.graphics.getWidth() / 2 - chairTexture.getWidth(), 250, Gdx.graphics.getWidth() / 2, 1200);
+            chairSprite.draw(chairTexture, chairX, chairY, chairWidth, chairHeight);
             chairSprite.end();
             sportikDraw();
 

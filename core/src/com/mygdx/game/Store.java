@@ -46,7 +46,7 @@ public class Store {
     private float rectWidth = Gdx.graphics.getWidth() / 1.2f;
     private float rectHeight = Gdx.graphics.getHeight() / 1.3f;
     private float plateX = rectX + rectWidth / 3;
-    private float plateY = rectY + rectHeight / 1.8f;
+    private float plateY = rectY + rectHeight / 1.5f;
     private float plateWidth = rectWidth / 3;
     private float plateHeight = rectWidth / 3;
     private Stage stage;
@@ -102,16 +102,17 @@ public class Store {
 
     private void FoodTableInit() {
         foodTable = new Table();
-        foodTable.setPosition(100, Gdx.graphics.getHeight() / 10);
-        int width = Gdx.graphics.getWidth() / 4;
+        int width = Gdx.graphics.getWidth() / 5;
         int height = width;
-        foodTable.setSize(Gdx.graphics.getWidth()-200,Gdx.graphics.getHeight());
+        int maxCount = Gdx.graphics.getWidth()/width;
+        foodTable.setPosition(20, Gdx.graphics.getHeight()/12);
+        foodTable.setFillParent(true);
         int counter = 1;
-        for (Object it : food.values()) {
-            Image image = new Image(((Food) it).texture);
-            image.setName(((Food) it).name);
-            foodTable.add(image).width(width).height(height).pad(10).spaceBottom(Gdx.graphics.getHeight() / 14);
-            if (counter % 4 == 0) {
+        for (Food it : food.values()) {
+            Image image = new Image(it.texture);
+            image.setName(it.name);
+            foodTable.add(image).width(width).height(height).padRight(2).spaceBottom(Gdx.graphics.getHeight()/8.5f);
+            if (counter % maxCount == 0) {
                 foodTable.add().row();
             }
             counter++;
@@ -241,7 +242,7 @@ public class Store {
             InitButtons();
         }
         buyingFoodSprite.begin();
-        buyingFoodSprite.draw(buyingFoodTexture, plateX, plateY + plateHeight, plateHeight, plateWidth);
+        buyingFoodSprite.draw(buyingFoodTexture, plateX, plateY , plateHeight, plateWidth);
         buyingFoodSprite.end();
 
         buyingStage.act();
