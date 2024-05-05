@@ -11,9 +11,17 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Scene scene;
 	public static int user_money = 500;
 	public static HashMap<String, Food> food = new HashMap<>();
-	private void FoodInit(){
-		FileHandle file = Gdx.files.internal("Food/FoodList.txt");
-		String scanLine = file.readString();
+	private void FoodInit()
+	{
+		FileHandle file = null;
+		String scanLine = "";
+		try {
+			file = Gdx.files.local("Food/FoodList.txt");
+			scanLine = file.readString();
+		}catch(com.badlogic.gdx.utils.GdxRuntimeException ex){
+			file = Gdx.files.internal("Food/FoodList.txt");
+			scanLine = file.readString();
+		}
 		String[] food_list = scanLine.split("\r\n");
 		for (String it : food_list) {
 			String[]tmp = it.split(" ");
@@ -36,23 +44,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		scene.draw();
 		scene.action();
-	}
-
-
-	private void saveChanges(){
-		new Thread(()->{
-			FileHandle handle = new FileHandle("Food/FoodList.txt");
-			StringBuffer tmp = new StringBuffer();
-			for(Food food:food.values()){
-				tmp.append(food.name+" "+"cost="+food.cost
-						+" healthBonus="+food.healthBonus
-						+" sleepBonus="+food.sleepBonus
-						+" musclesBonus="+food.musclesBonus
-						+" count="+food.count
-						+food.path+"\n");
-			}
-			handle.writeString(tmp.toString(),false);
-		}).start();
 	}
 	@Override
 	public void dispose () {

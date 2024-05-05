@@ -172,6 +172,19 @@ public class Store {
                         statusLine = "Успешная покупка";
                         statusFont.setColor(Color.GREEN);
                         added = true;
+                        new Thread(()->{
+                            FileHandle handle = Gdx.files.local("Food/FoodList.txt");
+                            StringBuffer tmp = new StringBuffer();
+                            for (Food food : food.values()) {
+                                tmp.append(food.name + " " + "cost=" + food.cost
+                                        + " healthBonus=" + food.healthBonus
+                                        + " sleepBonus=" + food.sleepBonus
+                                        + " musclesBonus=" + food.musclesBonus
+                                        + " count=" + food.count
+                                        + " path="+food.path + "\r\n");
+                            }
+                            handle.writeString(tmp.toString(), false);
+                        }).start();
                     }
                 }
             }

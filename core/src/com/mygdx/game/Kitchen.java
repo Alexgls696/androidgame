@@ -187,6 +187,20 @@ public class Kitchen implements Scene {
                 break;
             }
         }
+        //Перезапись файла с едой
+        new Thread(()->{
+            FileHandle handle = Gdx.files.local("Food/FoodList.txt");
+            StringBuffer tmp = new StringBuffer();
+            for (Food food : hashFoodMap.values()) {
+                tmp.append(food.name + " " + "cost=" + food.cost
+                        + " healthBonus=" + food.healthBonus
+                        + " sleepBonus=" + food.sleepBonus
+                        + " musclesBonus=" + food.musclesBonus
+                        + " count=" + food.count
+                        + " path="+food.path + "\r\n");
+            }
+            handle.writeString(tmp.toString(), false);
+        }).start();
         InitScrollPanel();
     }
 
@@ -222,7 +236,6 @@ public class Kitchen implements Scene {
                 new Thread(() -> {
                     eatSound.play();
                 }).start();
-
             } else {
                 mouthOpeningAnimationFlag = false;
                 noAnimation = true;
