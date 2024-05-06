@@ -113,6 +113,7 @@ public class Room implements Scene {
             sport_sprite.draw(sport_texture, 360, 250);
             sport_sprite.end();
         }
+        MyGdxGame.stateDrawer.draw_states();
     }
 
     @Override

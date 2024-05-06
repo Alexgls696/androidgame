@@ -35,6 +35,7 @@ public class Bedroom implements Scene{
         batch.draw(img, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
         stage.draw();
+        MyGdxGame.stateDrawer.draw_states();
     }
 
     public void dispose() {

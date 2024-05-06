@@ -175,7 +175,7 @@ public class Kitchen implements Scene {
     private void init_buttons() {
         storeButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Kitchen/store.png")), new TextureRegionDrawable(new Texture("Scenes/Kitchen/store.png")));
         storeButton.setSize(200, 200);
-        storeButton.setPosition(Gdx.graphics.getWidth() - storeButton.getWidth() - 50, Gdx.graphics.getHeight() - storeButton.getHeight() - 50);
+        storeButton.setPosition(Gdx.graphics.getWidth() - storeButton.getWidth() - 50, Gdx.graphics.getHeight() - storeButton.getHeight() - 100);
         storeButton.getImage().setFillParent(true);
         storeButton.addListener(new ClickListener() {
             @Override
@@ -330,6 +330,8 @@ public class Kitchen implements Scene {
 
             stage.act(); //Еда
             stage.draw();
+
+            MyGdxGame.stateDrawer.draw_states();
         }
     }
 

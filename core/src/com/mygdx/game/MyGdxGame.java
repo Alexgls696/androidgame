@@ -16,7 +16,9 @@ import com.mygdx.game.Food.Food;
 import java.util.HashMap;
 
 public class MyGdxGame extends ApplicationAdapter {
-    public static int health = 100;
+    public static int hunger;
+    public static int muscleMass;
+    public static int sleep;
     public static int user_money = 1000;
     public static HashMap<String, Food> food = new HashMap<>();
     public static Scene scene;
@@ -24,6 +26,30 @@ public class MyGdxGame extends ApplicationAdapter {
     public static Scene scene_room;
     public static Scene scene_kitchen;
     public static Scene scene_bedroom;
+    public static StateDrawer stateDrawer;
+    public static boolean changeTableFlag = true;
+
+    private void StateLoad(){
+        FileHandle file = null;
+        String scanLine = "";
+        try {
+            file = Gdx.files.local("State/state.txt");
+            scanLine = file.readString();
+        } catch (com.badlogic.gdx.utils.GdxRuntimeException ex) {
+            file = Gdx.files.internal("State/state.txt");
+            scanLine = file.readString();
+        }
+        String[] food_list = scanLine.split(" ");
+        int hung = Integer.parseInt(food_list[0]);
+        int muscle = Integer.parseInt(food_list[1]);
+        int sleeps = Integer.parseInt(food_list[2]);
+        int money = Integer.parseInt(food_list[3]);
+        hunger=hung;
+        muscleMass=muscle;
+        sleep=sleeps;
+        user_money=money;
+        System.out.println("gdg");
+    }
     private void FoodInit() {
         FileHandle file = null;
         String scanLine = "";
@@ -51,11 +77,38 @@ public class MyGdxGame extends ApplicationAdapter {
     @Override
     public void create() {
         FoodInit();
+        StateLoad();
+        stateDrawer=new StateDrawer();
         scene_room = new Room();
         scene_kitchen = new Kitchen(food);
         scene_bedroom = new Bedroom();
         scene = scene_kitchen;
         Gdx.input.setInputProcessor(scene.getStage());
+
+        new Thread(()->{
+            int counter = 0;
+            try {
+                while(true){
+                    Thread.sleep(1000);
+                    counter++;
+                    if(counter%5==0){
+                        if(hunger>0) {
+                            hunger--;
+                        }
+                        if(sleep<100){
+                            sleep++;
+                        }
+                        changeTableFlag=true;
+                    }
+                    if(counter%180==0){
+                        muscleMass--;
+                        changeTableFlag=true;
+                    }
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     @Override
