@@ -63,6 +63,7 @@ public class Kitchen implements Scene {
     private float chairY = 250;
     private float chairWidth = Gdx.graphics.getWidth() / 2;
     private float chairHeight = Gdx.graphics.getHeight()/2;
+    private float deskHeight = Gdx.graphics.getHeight()/3;
     private  int sportikX;
     private  int sportikY;
     public Kitchen(HashMap<String, Food> foodHashMap) {
@@ -165,7 +166,7 @@ public class Kitchen implements Scene {
         scroller = new ScrollPane(scrollTable);
         final Table finalTable = new Table();
         finalTable.setSize(Gdx.graphics.getWidth(), 400);
-        finalTable.setPosition(0, 690);
+        finalTable.setPosition(0, deskHeight-120);
         finalTable.add(scroller).fill().expand();
         finalTable.setName("scroll_table");
         stage.addActor(finalTable);
@@ -395,7 +396,7 @@ public class Kitchen implements Scene {
             sportikDraw();
 
             deskSprite.begin();
-            deskSprite.draw(deskTexture, -50, 50, Gdx.graphics.getWidth() + 100, 800);
+            deskSprite.draw(deskTexture, -50, 50, Gdx.graphics.getWidth() + 100, deskHeight);
             deskSprite.end();
 
             stage.act(); //Еда

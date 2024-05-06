@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class MyGdxGame extends ApplicationAdapter {
 	public static int health = 100;
-	public static int user_money = 500;
+	public static int user_money = 1000;
 	public static HashMap<String, Food> food = new HashMap<>();
 	private void FoodInit()
 	{

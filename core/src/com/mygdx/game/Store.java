@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.HashMap;
@@ -101,17 +102,17 @@ public class Store {
     }
 
     private void FoodTableInit() {
+        int maxCount = 4;
         foodTable = new Table();
-        int width = Gdx.graphics.getWidth() / 5;
+        int width = Gdx.graphics.getWidth() /maxCount;
         int height = width;
-        int maxCount = Gdx.graphics.getWidth()/width;
-        foodTable.setPosition(20, Gdx.graphics.getHeight()/12);
-        foodTable.setFillParent(true);
+        int bottom = Gdx.graphics.getWidth()/5;
+        foodTable.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2-10);
         int counter = 1;
         for (Food it : food.values()) {
             Image image = new Image(it.texture);
             image.setName(it.name);
-            foodTable.add(image).width(width).height(height).padRight(2).spaceBottom(Gdx.graphics.getHeight()/8.5f);
+            foodTable.add(image).width(width).height(height).spaceBottom(bottom).padRight(10);
             if (counter % maxCount == 0) {
                 foodTable.add().row();
             }
@@ -210,7 +211,7 @@ public class Store {
         Integer healthBonus = current_food.healthBonus;
         Integer sleepBonus = current_food.sleepBonus;
 
-        Label nameLabel = new Label(current_food.name, style);
+        Label nameLabel = new Label(current_food.name.replace("_"," "), style);
         Label costLabel = new Label("Стоимость: " + cost, style);
         Label healthLabel = new Label("Бонус к здоровью: " + healthBonus, style);
         Label musclesLabel = new Label("Бонус к мышечной массе: " + muscleBonus, style);
