@@ -313,7 +313,8 @@ public class Kitchen implements Scene {
                 mouthOpenStateTime = 0;
                 DecreaseFood();
                 new Thread(() -> {
-                    eatSound.play();
+                    long id = eatSound.play();
+                    eatSound.setVolume(id,0.25f);
                 }).start();
             } else {
                 mouthOpeningAnimationFlag = false;
