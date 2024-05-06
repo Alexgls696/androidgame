@@ -3,16 +3,13 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Food.Food;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -71,14 +68,53 @@ public class MyGdxGame extends ApplicationAdapter {
         }
     }
 
-    private void WriteStateToFile() {
-        new Thread(() -> {
-            FileHandle handle = Gdx.files.local("State/state.txt");
-            String writeLine = hunger + " " + muscleMass + " " + sleep + " " + user_money;
-            handle.writeString(writeLine, false);
-        }).start();
+    private void StateChanger(int counter,boolean startGame){
+        if(!startGame) {
+            if(hunger==0&&sleep==100&&muscleMass==0){
+                return;
+            }
+            if (counter % 60 == 0) {
+                if (hunger > 0) {
+                    hunger -= 5;
+                    if (hunger < 0) {
+                        hunger = 0;
+                    }
+                }
+                if (sleep < 100) {
+                    sleep++;
+                }
+                changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
+                WriteStateInFile(); //Запись измененных значений в файл
+            }
+            if (counter % 180 == 0) {
+                if(muscleMass>0) {
+                    muscleMass--;
+                }
+                changeTableFlag = true;
+                WriteStateInFile();
+            }
+        }else{
+            for(int i = 0; i <= counter; i++){
+                if (i % 60 == 0) {
+                    if (hunger > 0) {
+                        hunger -= 5;
+                        if (hunger < 0) {
+                            hunger = 0;
+                        }
+                    }
+                    if (sleep < 100) {
+                        sleep++;
+                    }
+                }
+                if (i % 180 == 0) {
+                    if(muscleMass>0) {
+                        muscleMass--;
+                    }
+                }
+            }
+            WriteStateInFile();
+        }
     }
-
     private void Timer()//Логика изменения состояния персонажа
     {
         new Thread(() -> {
@@ -87,32 +123,69 @@ public class MyGdxGame extends ApplicationAdapter {
                 while (true) {
                     Thread.sleep(1000);
                     counter++;
-                    if (counter % 60 == 0) {
-                        if (hunger > 0) {
-                            hunger -= 5;
-                        }
-                        if (sleep < 100) {
-                            sleep++;
-                        }
-                        changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
-                        WriteStateToFile(); //Запись измененных значений в файл
-                    }
-                    if (counter % 180 == 0) {
-                        muscleMass--;
-                        changeTableFlag = true;
-                        WriteStateToFile();
-                    }
+                    StateChanger(counter,false);
+                    new Thread(this::writeDateInFile).start(); // Перезапись времени
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }).start();
     }
+    private void WriteStateInFile() {
+        new Thread(() -> {
+            FileHandle handle = Gdx.files.local("State/state.txt");
+            String writeLine = hunger + " " + muscleMass + " " + sleep + " " + user_money;
+            handle.writeString(writeLine, false);
+        }).start();
+    }
+    private  void writeDateInFile(){
+        LocalDateTime time = LocalDateTime.now();
+        int hour = time.getHour();
+        int minute = time.getMinute();
+        int second = time.getSecond();
+
+        int year = time.getYear();
+        int month = time.getMonthValue();
+        int day = time.getDayOfMonth();
+
+        new Thread(() -> {
+            FileHandle handle = Gdx.files.local("State/date.txt");
+            String writeLine = hour+" "+minute+" "+second+" "+year+" "+month+" "+day;
+            handle.writeString(writeLine, false);
+        }).start();
+    }
+
+    private void getTimeAndChangeStatus(){
+        LocalDateTime time = LocalDateTime.now();
+        int hour = time.getHour();
+        int minute = time.getMinute();
+        int second = time.getSecond();
+        int year = time.getYear();
+        int month = time.getMonthValue();
+        int day = time.getDayOfMonth();
+
+        FileHandle file = null;
+        String scanLine = "";
+        try {
+            file = Gdx.files.local("State/date.txt");
+            scanLine = file.readString();
+        } catch (com.badlogic.gdx.utils.GdxRuntimeException ex) {
+            return;
+        }
+        String[]date = scanLine.split(" ");
+
+        ZonedDateTime aDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, ZoneId.of("Europe/Sarajevo"));
+        ZonedDateTime otherDateTime = ZonedDateTime.of(Integer.parseInt(date[3]), Integer.parseInt(date[4]),  Integer.parseInt(date[5]),  Integer.parseInt(date[0]),  Integer.parseInt(date[1]),  Integer.parseInt(date[2]), 0, ZoneId.of("Europe/Sarajevo"));
+
+        long diffSeconds = -ChronoUnit.SECONDS.between(aDateTime, otherDateTime);
+        StateChanger((int)diffSeconds,true);
+    }
 
     @Override
     public void create() {
         FoodInit();
         StateLoad();
+        getTimeAndChangeStatus();
         stateDrawer = new StateDrawer();
         scene_room = new Room();
         scene_kitchen = new Kitchen(food);
@@ -120,6 +193,7 @@ public class MyGdxGame extends ApplicationAdapter {
         scene = scene_kitchen;
         Gdx.input.setInputProcessor(scene.getStage());
         Timer();
+
     }
 
     @Override

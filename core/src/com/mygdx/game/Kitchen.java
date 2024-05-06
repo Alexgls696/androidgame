@@ -196,6 +196,9 @@ public class Kitchen implements Scene {
         if(MyGdxGame.hunger>100){
             MyGdxGame.hunger=100;
         }
+        if(MyGdxGame.hunger<0){
+            MyGdxGame.hunger=0;
+        }
         if(MyGdxGame.sleep>100){
             MyGdxGame.sleep=100;
         }
