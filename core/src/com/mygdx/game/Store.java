@@ -104,15 +104,15 @@ public class Store {
     private void FoodTableInit() {
         int maxCount = 4;
         foodTable = new Table();
-        int width = Gdx.graphics.getWidth() /maxCount;
-        int height = width;
-        int bottom = Gdx.graphics.getWidth()/5;
-        foodTable.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2-10);
+        float width = Gdx.graphics.getHeight() /maxCount/2.5f;
+        float height = width;
+        float bottom = Gdx.graphics.getHeight()/9f;
+        foodTable.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2-20);
         int counter = 1;
         for (Food it : food.values()) {
             Image image = new Image(it.texture);
             image.setName(it.name);
-            foodTable.add(image).width(width).height(height).spaceBottom(bottom).padRight(10);
+            foodTable.add(image).width(width).height(height).spaceBottom(bottom);
             if (counter % maxCount == 0) {
                 foodTable.add().row();
             }
