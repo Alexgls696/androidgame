@@ -91,6 +91,7 @@ public class Kitchen implements Scene {
 
     @Override
     public void create() {
+        Gdx.input.setInputProcessor(stage);
         backSprite = new SpriteBatch();
         backTexture = new Texture("Scenes/Kitchen/Kitchen.jpg");
         sport_sprite = new SpriteBatch();
@@ -146,11 +147,50 @@ public class Kitchen implements Scene {
     }
 
     private void init_buttons() {
-        ImageButton imageButton = new ImageButton(new TextureRegionDrawable(new Texture("Default.png")), new TextureRegionDrawable(new Texture("Hover.png")));
-        imageButton.setSize(600, 300);
-        imageButton.setPosition(300, 500);
-        imageButton.getImage().setFillParent(true);
-        imageButton.addListener(new InputListener() {
+        ImageButton imageButtonGames = new ImageButton(new TextureRegionDrawable(new Texture("button_games.png")), new TextureRegionDrawable(new Texture("button_games.png")));
+        imageButtonGames.setPosition(210, 100);
+        imageButtonGames.getImage().setFillParent(true);
+
+        ImageButton imageButtonRoom = new ImageButton(new TextureRegionDrawable(new Texture("button_room.png")), new TextureRegionDrawable(new Texture("button_room.png")));
+        imageButtonRoom.setPosition(380, 100);
+        imageButtonRoom.getImage().setFillParent(true);
+
+        ImageButton imageButtonKitchen = new ImageButton(new TextureRegionDrawable(new Texture("button_kitchen.png")), new TextureRegionDrawable(new Texture("button_kitchen.png")));
+        imageButtonKitchen.setPosition(550, 100);
+        imageButtonKitchen.getImage().setFillParent(true);
+
+        ImageButton imageButtonBedroom = new ImageButton(new TextureRegionDrawable(new Texture("button_bedroom.png")), new TextureRegionDrawable(new Texture("button_bedroom.png")));
+        imageButtonBedroom.setPosition(720, 100);
+        imageButtonBedroom.getImage().setFillParent(true);
+        imageButtonGames.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    MyGdxGame.scene=MyGdxGame.scene_games;
+                    Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
+                    return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+
+        imageButtonRoom.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    MyGdxGame.scene=MyGdxGame.scene_room;
+                    Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
+                    return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+
+        imageButtonKitchen.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return super.touchDown(event, x, y, pointer, button);
@@ -161,7 +201,24 @@ public class Kitchen implements Scene {
                 super.touchUp(event, x, y, pointer, button);
             }
         });
-        //stage.addActor(imageButton);
+
+        imageButtonBedroom.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    MyGdxGame.scene=MyGdxGame.scene_bedroom;
+                    Gdx.input.setInputProcessor(MyGdxGame.scene_bedroom.getStage());
+                    return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+        stage.addActor(imageButtonGames);
+        stage.addActor(imageButtonRoom);
+        stage.addActor(imageButtonKitchen);
+        stage.addActor(imageButtonBedroom);
     }
 
 
@@ -268,10 +325,15 @@ public class Kitchen implements Scene {
         mouthCloseTextureAtlas.dispose();
         mouthCloseSpriteBatch.dispose();
         mouthOpenSpriteBatch.dispose();
+        stage.dispose();
     }
 
     @Override
     public void action() {
         checkMovableFood(); //Движение еды
+    }
+    @Override
+    public Stage getStage() {
+        return stage;
     }
 }
