@@ -41,15 +41,12 @@ public class MyGdxGame extends ApplicationAdapter {
             scanLine = file.readString();
         }
         String[] food_list = scanLine.split(" ");
-        int hung = Integer.parseInt(food_list[0]);
-        int muscle = Integer.parseInt(food_list[1]);
-        int sleeps = Integer.parseInt(food_list[2]);
-        int money = Integer.parseInt(food_list[3]);
-        hunger=hung;
-        muscleMass=muscle;
-        sleep=sleeps;
-        user_money=money;
+        hunger = Integer.parseInt(food_list[0]);
+        muscleMass = Integer.parseInt(food_list[1]);
+        sleep = Integer.parseInt(food_list[2]);
+        user_money = Integer.parseInt(food_list[3]);
     }
+
     private void FoodInit() {
         FileHandle file = null;
         String scanLine = "";
@@ -74,35 +71,35 @@ public class MyGdxGame extends ApplicationAdapter {
         }
     }
 
-    private void WriteStateToFile(){
-        new Thread(()->{
+    private void WriteStateToFile() {
+        new Thread(() -> {
             FileHandle handle = Gdx.files.local("State/state.txt");
-            String writeLine = hunger+" "+muscleMass+" "+sleep+" "+user_money;
+            String writeLine = hunger + " " + muscleMass + " " + sleep + " " + user_money;
             handle.writeString(writeLine, false);
         }).start();
     }
 
     private void Timer()//Логика изменения состояния персонажа
     {
-        new Thread(()->{
+        new Thread(() -> {
             int counter = 0;
             try {
-                while(true){
+                while (true) {
                     Thread.sleep(1000);
                     counter++;
-                    if(counter%60==0){
-                        if(hunger>0) {
-                            hunger-=5;
+                    if (counter % 60 == 0) {
+                        if (hunger > 0) {
+                            hunger -= 5;
                         }
-                        if(sleep<100){
+                        if (sleep < 100) {
                             sleep++;
                         }
-                        changeTableFlag=true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
+                        changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
                         WriteStateToFile(); //Запись измененных значений в файл
                     }
-                    if(counter%180==0){
+                    if (counter % 180 == 0) {
                         muscleMass--;
-                        changeTableFlag=true;
+                        changeTableFlag = true;
                         WriteStateToFile();
                     }
                 }
@@ -111,11 +108,12 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }).start();
     }
+
     @Override
     public void create() {
         FoodInit();
         StateLoad();
-        stateDrawer=new StateDrawer();
+        stateDrawer = new StateDrawer();
         scene_room = new Room();
         scene_kitchen = new Kitchen(food);
         scene_bedroom = new Bedroom();
