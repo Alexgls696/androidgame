@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+
+//Класс отвечает за отрисовку нижней панели во всех комнатах.
 public class MainTable {
     private static Image imageGames;
     private static Image imageRoom;
@@ -30,8 +32,8 @@ public class MainTable {
                 String name = actor.getName();
                 switch (name) {
                     case "games":
-                        MyGdxGame.scene = MyGdxGame.scene_games;
-                        Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
+                        //MyGdxGame.scene = MyGdxGame.scene_games;
+                        //Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
                         break;
                     case "room":
                         MyGdxGame.scene = MyGdxGame.scene_room;

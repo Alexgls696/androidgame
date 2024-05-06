@@ -29,7 +29,8 @@ public class MyGdxGame extends ApplicationAdapter {
     public static StateDrawer stateDrawer;
     public static boolean changeTableFlag = true;
 
-    private void StateLoad(){
+    private void StateLoad() //Загрузка состояния персонажа из файла
+    {
         FileHandle file = null;
         String scanLine = "";
         try {
@@ -48,7 +49,6 @@ public class MyGdxGame extends ApplicationAdapter {
         muscleMass=muscle;
         sleep=sleeps;
         user_money=money;
-        System.out.println("gdg");
     }
     private void FoodInit() {
         FileHandle file = null;
@@ -74,6 +74,43 @@ public class MyGdxGame extends ApplicationAdapter {
         }
     }
 
+    private void WriteStateToFile(){
+        new Thread(()->{
+            FileHandle handle = Gdx.files.local("State/state.txt");
+            String writeLine = hunger+" "+muscleMass+" "+sleep+" "+user_money;
+            handle.writeString(writeLine, false);
+        }).start();
+    }
+
+    private void Timer()//Логика изменения состояния персонажа
+    {
+        new Thread(()->{
+            int counter = 0;
+            try {
+                while(true){
+                    Thread.sleep(1000);
+                    counter++;
+                    if(counter%60==0){
+                        if(hunger>0) {
+                            hunger-=5;
+                        }
+                        if(sleep<100){
+                            sleep++;
+                        }
+                        changeTableFlag=true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
+                        WriteStateToFile(); //Запись измененных значений в файл
+                    }
+                    if(counter%180==0){
+                        muscleMass--;
+                        changeTableFlag=true;
+                        WriteStateToFile();
+                    }
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
     @Override
     public void create() {
         FoodInit();
@@ -84,31 +121,7 @@ public class MyGdxGame extends ApplicationAdapter {
         scene_bedroom = new Bedroom();
         scene = scene_kitchen;
         Gdx.input.setInputProcessor(scene.getStage());
-
-        new Thread(()->{
-            int counter = 0;
-            try {
-                while(true){
-                    Thread.sleep(1000);
-                    counter++;
-                    if(counter%5==0){
-                        if(hunger>0) {
-                            hunger--;
-                        }
-                        if(sleep<100){
-                            sleep++;
-                        }
-                        changeTableFlag=true;
-                    }
-                    if(counter%180==0){
-                        muscleMass--;
-                        changeTableFlag=true;
-                    }
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
+        Timer();
     }
 
     @Override

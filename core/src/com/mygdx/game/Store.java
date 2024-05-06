@@ -85,7 +85,6 @@ public class Store {
                 new TextureRegionDrawable(new Texture("Scenes/Store/ok.png")));
         noImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
                 new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
-
         //Инициализация кнопки назад
         backImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
                 new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
@@ -160,7 +159,7 @@ public class Store {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 long current_time = System.currentTimeMillis();
-                if(current_time-timer>500) {
+                if(current_time-timer>250) {
                     timer = System.currentTimeMillis();
                     Food current_food = food.get(buyingName);
                     if (MyGdxGame.user_money - current_food.cost < 0) {
@@ -174,6 +173,7 @@ public class Store {
                         statusLine = "Успешная покупка";
                         statusFont.setColor(Color.GREEN);
                         added = true;
+                        MyGdxGame.changeTableFlag=true;
                         new Thread(()->{
                             FileHandle handle = Gdx.files.local("Food/FoodList.txt");
                             StringBuffer tmp = new StringBuffer();

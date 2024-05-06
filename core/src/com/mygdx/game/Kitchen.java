@@ -187,8 +187,32 @@ public class Kitchen implements Scene {
         stage.addActor(new MainTable().getMainTable());
     }
 
+    private void ChangeState(){
+        Food food = hashFoodMap.get(movableFoodName);
+        MyGdxGame.hunger+=food.healthBonus;
+        MyGdxGame.sleep+=food.sleepBonus;
+        MyGdxGame.muscleMass+=food.musclesBonus;
+
+        if(MyGdxGame.hunger>100){
+            MyGdxGame.hunger=100;
+        }
+        if(MyGdxGame.sleep>100){
+            MyGdxGame.sleep=100;
+        }
+        if(MyGdxGame.sleep<0){
+            MyGdxGame.sleep=0;
+        }
+        if(MyGdxGame.muscleMass>100){
+            MyGdxGame.muscleMass=100;
+        }
+        if(MyGdxGame.muscleMass<0){
+            MyGdxGame.muscleMass=0;
+        }
+        MyGdxGame.changeTableFlag=true;
+    }
     private void DecreaseFood() {
         hashFoodMap.get(movableFoodName).count--;
+        ChangeState();
         for (Actor actor : stage.getActors()) {
             String name = actor.getName();
             if (name != null && name.equals("scroll_table")) {
