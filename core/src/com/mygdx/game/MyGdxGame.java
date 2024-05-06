@@ -169,6 +169,7 @@ public class MyGdxGame extends ApplicationAdapter {
             file = Gdx.files.local("State/date.txt");
             scanLine = file.readString();
         } catch (com.badlogic.gdx.utils.GdxRuntimeException ex) {
+            writeDateInFile();
             return;
         }
         String[]date = scanLine.split(" ");
