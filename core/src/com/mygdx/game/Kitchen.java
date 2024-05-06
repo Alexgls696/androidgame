@@ -156,7 +156,7 @@ public class Kitchen implements Scene {
                 String name = actor.getName();
                 if (name != null) {
                     movableFoodTexture = hashFoodMap.get(name).texture;
-                    movableFoodSprite = new SpriteBatch();
+                    movableFoodName = name;
                     return true;
                 }
                 return false;

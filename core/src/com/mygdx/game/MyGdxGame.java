@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 public class MyGdxGame extends ApplicationAdapter {
 	public static int health = 100;
-	private Scene scene;
 	public static int user_money = 500;
 	public static HashMap<String, Food> food = new HashMap<>();
 	private void FoodInit()
@@ -35,6 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			food.put(name, new Food(name,cost,health,sleep,muscles,count,path));
 		}
 	}
+	public static Scene scene;
 	public static Scene scene_games;
 	public static Scene scene_room;
 	public static Scene scene_kitchen;
@@ -42,8 +42,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void create() {
+		FoodInit();
 		scene_room=new Room();
-		scene_kitchen=new Kitchen();
+		scene_kitchen=new Kitchen(food);
 		scene_bedroom=new Bedroom();
 		scene = scene_room;
 		Gdx.input.setInputProcessor(scene.getStage());
