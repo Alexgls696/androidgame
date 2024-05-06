@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -94,7 +93,7 @@ public class MyGdxGame extends ApplicationAdapter {
                 WriteStateInFile();
             }
         }else{
-            for(int i = 0; i <= counter; i++){
+            for(int i = 1; i <= counter; i++){
                 if (i % 60 == 0) {
                     if (hunger > 0) {
                         hunger -= 5;
