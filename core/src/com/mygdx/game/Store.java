@@ -212,10 +212,10 @@ public class Store {
         Integer sleepBonus = current_food.sleepBonus;
 
         Label nameLabel = new Label(current_food.name.replace("_"," "), style);
-        Label costLabel = new Label("Стоимость: " + cost, style);
-        Label healthLabel = new Label("Насыщение : " + healthBonus, style);
-        Label musclesLabel = new Label("Мышечная масса : " + muscleBonus, style);
-        Label sleepLabel = new Label("Сонливость : " + sleepBonus, style);
+        Label costLabel = new Label("Стоимость: " + cost+" дублей", style);
+        Label healthLabel = new Label("Насыщение : " + healthBonus +" %", style);
+        Label musclesLabel = new Label("Мышечная масса : " + muscleBonus+" %", style);
+        Label sleepLabel = new Label("Сонливость : " + sleepBonus+" %", style);
         Label questionLabel = new Label("Купить? ",style);
         int pad = 50;
         labelsTable.add(nameLabel).spaceBottom(pad).row();

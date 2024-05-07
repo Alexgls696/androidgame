@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -37,16 +38,26 @@ public class MainTable {
                             //Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
                             break;
                         case "room":
+                            MyGdxGame.night_flag=false;
                             MyGdxGame.scene = MyGdxGame.scene_room;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
+                            MyGdxGame.last_room="room";
+                            WriteLastRoom();
                             break;
                         case "kitchen":
+                            MyGdxGame.night_flag=false;
                             MyGdxGame.scene = MyGdxGame.scene_kitchen;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_kitchen.getStage());
+                            MyGdxGame.last_room="kitchen";
+                            WriteLastRoom();
                             break;
                         case "bedroom":
+                            MyGdxGame.night_flag=false;
+                            Bedroom.change_time=true;
                             MyGdxGame.scene = MyGdxGame.scene_bedroom;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_bedroom.getStage());
+                            MyGdxGame.last_room="bedroom";
+                            WriteLastRoom();
                             break;
                     }
                 }
@@ -55,6 +66,14 @@ public class MainTable {
         mainTable.setPosition(0,-(Gdx.graphics.getHeight()/2.0f-width/1.7f));
         mainTable.setFillParent(true);
         return mainTable;
+    }
+
+    private void WriteLastRoom(){
+        new Thread(() -> {
+            FileHandle handle = Gdx.files.local("State/last_room.txt");
+            String writeLine = MyGdxGame.last_room;
+            handle.writeString(writeLine, false);
+        }).start();
     }
     private void InitPanelTextures() {
         imageGames= new Image(new Texture("button_games.png"));

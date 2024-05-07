@@ -25,6 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
     public static StateDrawer stateDrawer;
     public static boolean changeTableFlag = true;
     public static boolean night_flag=false;
+    public static String last_room = "";
 
     private void StateLoad() //Загрузка состояния персонажа из файла
     {
@@ -80,18 +81,31 @@ public class MyGdxGame extends ApplicationAdapter {
                         hunger = 0;
                     }
                 }
-                if (sleep < 100) {
-                    sleep++;
-                }
                 changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
                 WriteStateInFile(); //Запись измененных значений в файл
+            }
+            if(MyGdxGame.night_flag) {
+                if (sleep > 0) {
+                    sleep--;
+                }
+                changeTableFlag = true;
+                WriteStateInFile();
+            }
+            else {
+                if(counter%10==0) {
+                    if (sleep < 100) {
+                        sleep++;
+                        WriteStateInFile();
+                        changeTableFlag = true;
+                    }
+                }
             }
             if (counter % 180 == 0) {
                 if(muscleMass>0) {
                     muscleMass--;
+                    changeTableFlag = true;
+                    WriteStateInFile();
                 }
-                changeTableFlag = true;
-                WriteStateInFile();
             }
         }else{
             for(int i = 1; i <= counter; i++){
@@ -155,6 +169,33 @@ public class MyGdxGame extends ApplicationAdapter {
         }).start();
     }
 
+    private void chooseRoom(){
+        switch (last_room){
+            case "room":
+                scene=scene_room; break;
+            case "games":
+                scene=scene_games; break;
+            case "kitchen":
+                scene=scene_kitchen; break;
+            case "bedroom":
+                scene=scene_bedroom; break;
+            default:
+                scene=scene_room; break;
+        }
+    }
+    private void ReadLastRoom(){
+        FileHandle file = null;
+        String scanLine = "";
+        try {
+            file = Gdx.files.local("State/last_room.txt");
+            scanLine = file.readString();
+        } catch (com.badlogic.gdx.utils.GdxRuntimeException ex) {
+            file.writeString("room",false);
+            last_room="room";
+            return;
+        }
+        last_room=scanLine;
+    }
     private void getTimeAndChangeStatus(){
         LocalDateTime time = LocalDateTime.now();
         int hour = time.getHour();
@@ -187,11 +228,14 @@ public class MyGdxGame extends ApplicationAdapter {
         FoodInit();
         StateLoad();
         getTimeAndChangeStatus();
+
         stateDrawer = new StateDrawer();
         scene_room = new Room();
         scene_kitchen = new Kitchen(food);
         scene_bedroom = new Bedroom();
-        scene = scene_kitchen;
+
+        ReadLastRoom();
+        chooseRoom();
         Gdx.input.setInputProcessor(scene.getStage());
         Timer();
 

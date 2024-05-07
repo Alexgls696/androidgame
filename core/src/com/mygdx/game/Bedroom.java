@@ -19,7 +19,8 @@ public class Bedroom implements Scene{
     ImageButton imageButtonDay;
     ImageButton imageButtonNight;
     private Stage stage;
-    boolean change=false;
+    public static boolean change_time=false;
+    public static boolean change_out=false;
     Sound sound;
     public Bedroom(){
         create();
@@ -53,7 +54,7 @@ public class Bedroom implements Scene{
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 MyGdxGame.night_flag=true;
-                change=true;
+                change_time=true;
                 return super.touchDown(event, x, y, pointer, button);
             }
 
@@ -74,7 +75,7 @@ public class Bedroom implements Scene{
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 MyGdxGame.night_flag=false;
-                change=true;
+                change_time=true;
                 return super.touchDown(event, x, y, pointer, button);
             }
 
@@ -91,10 +92,12 @@ public class Bedroom implements Scene{
         if(!MyGdxGame.night_flag)
         {
             stage.getActors().removeValue(imageButtonNight, true);
+            stage.getActors().removeValue(imageButtonDay, true);
             init_buttonDay();
         }
         else {
             stage.getActors().removeValue(imageButtonDay, true);
+            stage.getActors().removeValue(imageButtonNight, true);
             init_buttonNight();
         }
     }
@@ -125,8 +128,8 @@ public class Bedroom implements Scene{
                 }).start();
             }
         }
-        if (change) {
-            change = false;
+        if (change_time) {
+            change_time = false;
             change_day_night();
         }
         stage.act();
