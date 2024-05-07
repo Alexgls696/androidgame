@@ -213,9 +213,9 @@ public class Store {
 
         Label nameLabel = new Label(current_food.name.replace("_"," "), style);
         Label costLabel = new Label("Стоимость: " + cost, style);
-        Label healthLabel = new Label("Бонус к здоровью: " + healthBonus, style);
-        Label musclesLabel = new Label("Бонус к мышечной массе: " + muscleBonus, style);
-        Label sleepLabel = new Label("Показатель сонливости: " + sleepBonus, style);
+        Label healthLabel = new Label("Насыщение : " + healthBonus, style);
+        Label musclesLabel = new Label("Мышечная масса : " + muscleBonus, style);
+        Label sleepLabel = new Label("Сонливость : " + sleepBonus, style);
         Label questionLabel = new Label("Купить? ",style);
         int pad = 50;
         labelsTable.add(nameLabel).spaceBottom(pad).row();
