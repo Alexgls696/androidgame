@@ -170,7 +170,7 @@ public class MyGdxGame extends ApplicationAdapter {
         }).start();
     }
 
-    private void WriteStateInFile() {
+    public static void WriteStateInFile() {
         new Thread(() -> {
             FileHandle handle = Gdx.files.local("State/state.txt");
             String writeLine = hunger + " " + muscleMass + " " + sleep + " " + user_money;

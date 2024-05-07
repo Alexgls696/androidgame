@@ -227,6 +227,7 @@ public class Store {
         labelsTable.setFillParent(true);
 
         buyingStage.addActor(labelsTable);
+
     }
 
     private void drawBuyWindow() {

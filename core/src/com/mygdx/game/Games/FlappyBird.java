@@ -111,6 +111,8 @@ public class FlappyBird implements Scene {
                     barrelY = 1100;
                     barrelVelocity = 0;
                     isBegin = true;
+                    MyGdxGame.changeTableFlag=true;
+                    MyGdxGame.WriteStateInFile();
                 } else if ((rect1.contains(screenX, screenY)) && (end_game)){
                     MyGdxGame.user_money += score;
                     end_game = false;
@@ -128,6 +130,8 @@ public class FlappyBird implements Scene {
                     MyGdxGame.scene= scene_games;
                     Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
                     choice_game = -1;
+                    MyGdxGame.changeTableFlag=true;
+                    MyGdxGame.WriteStateInFile();
                     return true;
                 }
                 if (!end_game)

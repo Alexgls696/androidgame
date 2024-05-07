@@ -114,6 +114,8 @@ public class DinoGame implements Scene {
                     MyGdxGame.scene= scene_games;
                     Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
                     choice_game = -1;
+                    MyGdxGame.changeTableFlag=true;
+                    MyGdxGame.WriteStateInFile();
                     return true;
                 }
                 return true;

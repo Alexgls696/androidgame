@@ -30,8 +30,6 @@ public class Game implements Scene{
         Gdx.input.setInputProcessor(stage);
         create();
     }
-
-
     Scene flappyBird;
     Texture games_background;
     Texture flappybird_icon;

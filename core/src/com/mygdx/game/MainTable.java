@@ -21,7 +21,7 @@ public class MainTable {
     }
     public Table getMainTable(){
         Table mainTable = new Table();
-        int width = Gdx.graphics.getWidth() / 5;
+        int width = Gdx.graphics.getWidth() / 6;
         mainTable.add(imageGames).width(width).height(width).pad(15);
         mainTable.add(imageRoom).width(width).height(width).pad(15);
         mainTable.add(imageKitchen).width(width).height(width).pad(15);
@@ -42,7 +42,6 @@ public class MainTable {
                             MyGdxGame.night_flag=false;
                             MyGdxGame.scene = MyGdxGame.scene_room;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
-
                             MyGdxGame.last_room="room";
                             MyGdxGame.WriteLastRoom();
                             break;
@@ -50,7 +49,6 @@ public class MainTable {
                             MyGdxGame.night_flag=false;
                             MyGdxGame.scene = MyGdxGame.scene_kitchen;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_kitchen.getStage());
-
                             MyGdxGame.last_room="kitchen";
                             MyGdxGame.WriteLastRoom();
                             break;
@@ -59,7 +57,6 @@ public class MainTable {
                             Bedroom.change_time=true;
                             MyGdxGame.scene = MyGdxGame.scene_bedroom;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_bedroom.getStage());
-
                             MyGdxGame.last_room="bedroom";
                             MyGdxGame.WriteLastRoom();
                             break;
@@ -67,7 +64,7 @@ public class MainTable {
                 }
             }
         });
-        mainTable.setPosition(0,-(Gdx.graphics.getHeight()/2.0f-width/1.7f));
+        mainTable.setPosition(0,-(Gdx.graphics.getHeight()/2.0f-width/1.2f));
         mainTable.setFillParent(true);
         return mainTable;
     }
