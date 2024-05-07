@@ -19,7 +19,6 @@ public class Bedroom implements Scene{
     ImageButton imageButtonDay;
     ImageButton imageButtonNight;
     private Stage stage;
-    boolean night_flag=false;
     boolean change=false;
     Sound sound;
     public Bedroom(){
@@ -110,14 +109,12 @@ public class Bedroom implements Scene{
         stage.addActor(imageButtonKitchen);
         stage.addActor(imageButtonBedroom);
 
-        if(!night_flag)
+        if(!MyGdxGame.night_flag)
         {
             init_buttonDay();
-            stage.addActor(imageButtonDay);
         }
         else {
             init_buttonNight();
-            stage.addActor(imageButtonNight);
         }
     }
 
@@ -128,7 +125,7 @@ public class Bedroom implements Scene{
         imageButtonDay.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                night_flag=true;
+                MyGdxGame.night_flag=true;
                 change=true;
                 return super.touchDown(event, x, y, pointer, button);
             }
@@ -138,6 +135,7 @@ public class Bedroom implements Scene{
                 super.touchUp(event, x, y, pointer, button);
             }
         });
+        stage.addActor(imageButtonDay);
     }
 
     private void init_buttonNight(){
@@ -148,7 +146,7 @@ public class Bedroom implements Scene{
         imageButtonNight.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                night_flag=false;
+                MyGdxGame.night_flag=false;
                 change=true;
                 return super.touchDown(event, x, y, pointer, button);
             }
@@ -158,55 +156,53 @@ public class Bedroom implements Scene{
                 super.touchUp(event, x, y, pointer, button);
             }
         });
+        stage.addActor(imageButtonNight);
     }
 
     private void change_day_night()
     {
-        if(!night_flag)
+        if(!MyGdxGame.night_flag)
         {
             stage.getActors().removeValue(imageButtonNight, true);
             init_buttonDay();
-            stage.addActor(imageButtonDay);
         }
         else {
             stage.getActors().removeValue(imageButtonDay, true);
             init_buttonNight();
-            stage.addActor(imageButtonNight);
         }
     }
 
     boolean soundFlag = true;
     public void draw() {
-        if(!night_flag)
-        {
+        if (!MyGdxGame.night_flag) {
             batch.begin();
             batch.draw(img_day, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
-        }
-        else {
+        } else {
             batch.begin();
             batch.draw(img_night, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
-            if(soundFlag)
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    soundFlag=false;
-                    sound.play();
-                    try {
-                        Thread.sleep(2500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+            if (soundFlag) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        soundFlag = false;
+                        sound.play();
+                        try {
+                            Thread.sleep(2500);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        soundFlag = true;
                     }
-                    soundFlag=true;
-                }
-            }).start();
+                }).start();
+            }
         }
-        if(change)
-        {
-            change=false;
+        if (change) {
+            change = false;
             change_day_night();
         }
+        stage.act();
         stage.draw();
     }
 

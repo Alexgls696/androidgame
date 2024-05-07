@@ -10,6 +10,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static int health = 100;
 	public static int user_money = 1000;
 	public static HashMap<String, Food> food = new HashMap<>();
+	public static boolean night_flag=false;
 	private void FoodInit()
 	{
 		FileHandle file = null;
