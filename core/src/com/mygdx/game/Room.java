@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.audio.AudioRecorder;
@@ -27,6 +28,8 @@ public class Room implements Scene {
     private Texture sport_texture;
     private SpriteBatch sport_sprite2;
     private Texture sport_texture2;
+    private SpriteBatch warning_sprite;
+    private Texture warning_texture;
     private final int sportikX = 360;
     private final int sportikY = 250;
     Vector2 sportikSize;
@@ -34,6 +37,8 @@ public class Room implements Scene {
     private boolean flag_thread = true;
     public static boolean isSoundDetected = false;
     private boolean flag_listen = false;
+    private boolean flag_mistake=false;
+    private boolean flag_mistake_dop=true;
     SpriteBatch mouthSpriteBatch;
     TextureAtlas mouthTextureAtlas;
     Animation<Sprite> mouthAnimation;
@@ -66,6 +71,8 @@ public class Room implements Scene {
 
         sport_sprite2 = new SpriteBatch();
         sport_texture2 = new Texture("Scenes/Room/sportik_listen.png");
+        warning_sprite = new SpriteBatch();
+        warning_texture = new Texture("Scenes/Room/warning.png");
     }
 
     private void InitSprites() {
@@ -78,16 +85,12 @@ public class Room implements Scene {
         ImageButton imageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Room/bag.png")), new TextureRegionDrawable(new Texture("Scenes/Room/bag_tap.png")));
         imageButton.setPosition(120, 500);
         imageButton.getImage().setFillParent(true);
-        imageButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!isSoundDetected) isSoundDetected = true;
-                return super.touchDown(event, x, y, pointer, button);
-            }
 
+        imageButton.addListener(new ClickListener(){
             @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isSoundDetected && !flag_mistake) isSoundDetected = true;
+                super.clicked(event, x, y);
             }
         });
         stage.addActor(imageButton);
@@ -122,6 +125,22 @@ public class Room implements Scene {
         batch.draw(img, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
         sportikDraw();
+        if (flag_mistake) {
+            warning_sprite.begin();
+            warning_sprite.draw(warning_texture, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2+325);
+            warning_sprite.end();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    flag_mistake=false;
+                }
+            }).start();
+        }
         stage.draw();
     }
 
@@ -136,6 +155,8 @@ public class Room implements Scene {
         stage.dispose();
         mouthTextureAtlas.dispose();
         mouthSpriteBatch.dispose();
+        warning_sprite.dispose();
+        warning_texture.dispose();
     }
 
     public void hit() {
@@ -173,6 +194,11 @@ public class Room implements Scene {
                         player.dispose();
                     } catch (Exception ex) {
                         flag_listen = false;
+                        if(flag_mistake_dop)
+                        {
+                            flag_mistake_dop=false;
+                            flag_mistake=true;
+                        }
                     }
                     flag_thread = true;
                     mouthStateTime = 0;
