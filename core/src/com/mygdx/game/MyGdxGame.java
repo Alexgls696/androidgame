@@ -99,7 +99,7 @@ public class MyGdxGame extends ApplicationAdapter {
                     WriteStateInFile();
                 }
             } else {
-                if (counter % 10 == 0) {
+                if (counter % 30 == 0) {
                     if (sleep < 100) {
                         sleep++;
                         changeTableFlag = true;
@@ -156,7 +156,7 @@ public class MyGdxGame extends ApplicationAdapter {
                     Thread.sleep(1000);
                     counter++;
                     StateChanger(counter, false);
-                    new Thread(this::writeDateInFile).start(); // Перезапись времени
+                    //new Thread(this::writeDateInFile).start(); // Перезапись времени
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
