@@ -26,7 +26,7 @@ public class Gym implements Scene {
     Texture hand_up;
     Texture button_exit;
     @Override
-    public void create() { // Тест
+    public void create() { // Тест 2
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
