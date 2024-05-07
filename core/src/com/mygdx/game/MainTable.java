@@ -30,23 +30,25 @@ public class MainTable {
             public void clicked(InputEvent event, float x, float y) {
                 Actor actor = mainTable.hit(x, y, true);
                 String name = actor.getName();
-                switch (name) {
-                    case "games":
-                        //MyGdxGame.scene = MyGdxGame.scene_games;
-                        //Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
-                        break;
-                    case "room":
-                        MyGdxGame.scene = MyGdxGame.scene_room;
-                        Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
-                        break;
-                    case "kitchen":
-                        MyGdxGame.scene = MyGdxGame.scene_kitchen;
-                        Gdx.input.setInputProcessor(MyGdxGame.scene_kitchen.getStage());
-                        break;
-                    case "bedroom":
-                        MyGdxGame.scene = MyGdxGame.scene_bedroom;
-                        Gdx.input.setInputProcessor(MyGdxGame.scene_bedroom.getStage());
-                        break;
+                if(!Room.isSoundDetected) {
+                    switch (name) {
+                        case "games":
+                            //MyGdxGame.scene = MyGdxGame.scene_games;
+                            //Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
+                            break;
+                        case "room":
+                            MyGdxGame.scene = MyGdxGame.scene_room;
+                            Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
+                            break;
+                        case "kitchen":
+                            MyGdxGame.scene = MyGdxGame.scene_kitchen;
+                            Gdx.input.setInputProcessor(MyGdxGame.scene_kitchen.getStage());
+                            break;
+                        case "bedroom":
+                            MyGdxGame.scene = MyGdxGame.scene_bedroom;
+                            Gdx.input.setInputProcessor(MyGdxGame.scene_bedroom.getStage());
+                            break;
+                    }
                 }
             }
         });

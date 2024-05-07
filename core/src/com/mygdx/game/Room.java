@@ -32,7 +32,7 @@ public class Room implements Scene {
     Vector2 sportikSize;
     private Stage stage;
     private boolean flag_thread = true;
-    private boolean isSoundDetected = false;
+    public static boolean isSoundDetected = false;
     private boolean flag_listen = false;
     SpriteBatch mouthSpriteBatch;
     TextureAtlas mouthTextureAtlas;
