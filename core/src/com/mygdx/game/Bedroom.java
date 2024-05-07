@@ -55,9 +55,9 @@ public class Bedroom implements Scene{
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 MyGdxGame.night_flag=true;
                 change_time=true;
+                MyGdxGame.WriteLastRoom();
                 return super.touchDown(event, x, y, pointer, button);
             }
-
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
@@ -70,12 +70,12 @@ public class Bedroom implements Scene{
         imageButtonNight = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Bedroom/button_night.png")), new TextureRegionDrawable(new Texture("Scenes/Bedroom/button_night.png")));
         imageButtonNight.setPosition(450, 780);
         imageButtonNight.getImage().setFillParent(true);
-
         imageButtonNight.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 MyGdxGame.night_flag=false;
                 change_time=true;
+                MyGdxGame.WriteLastRoom();
                 return super.touchDown(event, x, y, pointer, button);
             }
 

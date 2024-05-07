@@ -41,23 +41,26 @@ public class MainTable {
                             MyGdxGame.night_flag=false;
                             MyGdxGame.scene = MyGdxGame.scene_room;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
+
                             MyGdxGame.last_room="room";
-                            WriteLastRoom();
+                            MyGdxGame.WriteLastRoom();
                             break;
                         case "kitchen":
                             MyGdxGame.night_flag=false;
                             MyGdxGame.scene = MyGdxGame.scene_kitchen;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_kitchen.getStage());
+
                             MyGdxGame.last_room="kitchen";
-                            WriteLastRoom();
+                            MyGdxGame.WriteLastRoom();
                             break;
                         case "bedroom":
                             MyGdxGame.night_flag=false;
                             Bedroom.change_time=true;
                             MyGdxGame.scene = MyGdxGame.scene_bedroom;
                             Gdx.input.setInputProcessor(MyGdxGame.scene_bedroom.getStage());
+
                             MyGdxGame.last_room="bedroom";
-                            WriteLastRoom();
+                            MyGdxGame.WriteLastRoom();
                             break;
                     }
                 }
@@ -68,13 +71,6 @@ public class MainTable {
         return mainTable;
     }
 
-    private void WriteLastRoom(){
-        new Thread(() -> {
-            FileHandle handle = Gdx.files.local("State/last_room.txt");
-            String writeLine = MyGdxGame.last_room;
-            handle.writeString(writeLine, false);
-        }).start();
-    }
     private void InitPanelTextures() {
         imageGames= new Image(new Texture("button_games.png"));
         imageRoom = new Image(new Texture("button_room.png"));

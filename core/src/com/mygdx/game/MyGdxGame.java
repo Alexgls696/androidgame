@@ -24,7 +24,7 @@ public class MyGdxGame extends ApplicationAdapter {
     public static Scene scene_bedroom;
     public static StateDrawer stateDrawer;
     public static boolean changeTableFlag = true;
-    public static boolean night_flag=false;
+    public static boolean night_flag = false;
     public static String last_room = "";
 
     private void StateLoad() //Загрузка состояния персонажа из файла
@@ -69,9 +69,10 @@ public class MyGdxGame extends ApplicationAdapter {
         }
     }
 
-    private void StateChanger(int counter,boolean startGame){
-        if(!startGame) {
-            if(hunger==0&&sleep==100&&muscleMass==0){
+    private void StateChanger(int counter, boolean startGame) {
+        if (!startGame) //ВО время игры
+        {
+            if (hunger == 0 && sleep == 100 && muscleMass == 0) {
                 return;
             }
             if (counter % 60 == 0) {
@@ -84,31 +85,49 @@ public class MyGdxGame extends ApplicationAdapter {
                 changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
                 WriteStateInFile(); //Запись измененных значений в файл
             }
-            if(MyGdxGame.night_flag) {
-                if (sleep > 0) {
-                    sleep--;
-                }
-                changeTableFlag = true;
-                WriteStateInFile();
-            }
-            else {
-                if(counter%10==0) {
-                    if (sleep < 100) {
-                        sleep++;
-                        WriteStateInFile();
-                        changeTableFlag = true;
-                    }
-                }
-            }
             if (counter % 180 == 0) {
-                if(muscleMass>0) {
+                if (muscleMass > 0) {
                     muscleMass--;
                     changeTableFlag = true;
                     WriteStateInFile();
                 }
             }
-        }else{
-            for(int i = 1; i <= counter; i++){
+            if (night_flag) {
+                if (sleep > 0) {
+                    sleep--;
+                    changeTableFlag = true;
+                    WriteStateInFile();
+                }
+            } else {
+                if (counter % 10 == 0) {
+                    if (sleep < 100) {
+                        sleep++;
+                        changeTableFlag = true;
+                        WriteStateInFile();
+                    }
+                }
+            }
+
+        } else //Во время загрузки
+        {
+            for (int i = 1; i <= counter; i++) {
+                if (night_flag) {
+                    if (i % 10 == 0) {
+                        if (sleep > 0) {
+                            sleep--;
+                        }
+                        changeTableFlag = true;
+                        WriteStateInFile();
+                    }
+                } else {
+                    if (i % 10 == 0) {
+                        if (sleep < 100) {
+                            sleep++;
+                            WriteStateInFile();
+                            changeTableFlag = true;
+                        }
+                    }
+                }
                 if (i % 60 == 0) {
                     if (hunger > 0) {
                         hunger -= 5;
@@ -116,19 +135,18 @@ public class MyGdxGame extends ApplicationAdapter {
                             hunger = 0;
                         }
                     }
-                    if (sleep < 100) {
-                        sleep++;
-                    }
                 }
                 if (i % 180 == 0) {
-                    if(muscleMass>0) {
+                    if (muscleMass > 0) {
                         muscleMass--;
                     }
                 }
             }
+            changeTableFlag = true;
             WriteStateInFile();
         }
     }
+
     private void Timer()//Логика изменения состояния персонажа
     {
         new Thread(() -> {
@@ -137,7 +155,7 @@ public class MyGdxGame extends ApplicationAdapter {
                 while (true) {
                     Thread.sleep(1000);
                     counter++;
-                    StateChanger(counter,false);
+                    StateChanger(counter, false);
                     new Thread(this::writeDateInFile).start(); // Перезапись времени
                 }
             } catch (InterruptedException e) {
@@ -145,6 +163,7 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }).start();
     }
+
     private void WriteStateInFile() {
         new Thread(() -> {
             FileHandle handle = Gdx.files.local("State/state.txt");
@@ -152,7 +171,8 @@ public class MyGdxGame extends ApplicationAdapter {
             handle.writeString(writeLine, false);
         }).start();
     }
-    private  void writeDateInFile(){
+
+    private void writeDateInFile() {
         LocalDateTime time = LocalDateTime.now();
         int hour = time.getHour();
         int minute = time.getMinute();
@@ -164,39 +184,57 @@ public class MyGdxGame extends ApplicationAdapter {
 
         new Thread(() -> {
             FileHandle handle = Gdx.files.local("State/date.txt");
-            String writeLine = hour+" "+minute+" "+second+" "+year+" "+month+" "+day;
+            String writeLine = hour + " " + minute + " " + second + " " + year + " " + month + " " + day;
             handle.writeString(writeLine, false);
         }).start();
     }
 
-    private void chooseRoom(){
-        switch (last_room){
+    private void chooseRoom() {
+        switch (last_room) {
             case "room":
-                scene=scene_room; break;
+                scene = scene_room;
+                break;
             case "games":
-                scene=scene_games; break;
+                scene = scene_games;
+                break;
             case "kitchen":
-                scene=scene_kitchen; break;
+                scene = scene_kitchen;
+                break;
             case "bedroom":
-                scene=scene_bedroom; break;
+                scene = scene_bedroom;
+                break;
             default:
-                scene=scene_room; break;
+                scene = scene_room;
+                break;
         }
     }
-    private void ReadLastRoom(){
+
+    private void ReadLastRoom() {
         FileHandle file = null;
         String scanLine = "";
         try {
             file = Gdx.files.local("State/last_room.txt");
             scanLine = file.readString();
         } catch (com.badlogic.gdx.utils.GdxRuntimeException ex) {
-            file.writeString("room",false);
-            last_room="room";
+            file.writeString("room " + night_flag, false);
+            last_room = "room";
             return;
         }
-        last_room=scanLine;
+        String[] line = scanLine.split(" ");
+        last_room = line[0];
+        night_flag = Boolean.parseBoolean(line[1]);
+        System.out.println(night_flag);
     }
-    private void getTimeAndChangeStatus(){
+
+    public static void WriteLastRoom() {
+        new Thread(() -> {
+            FileHandle handle = Gdx.files.local("State/last_room.txt");
+            String writeLine = MyGdxGame.last_room + " " + night_flag;
+            handle.writeString(writeLine, false);
+        }).start();
+    }
+
+    private void getTimeAndChangeStatus() {
         LocalDateTime time = LocalDateTime.now();
         int hour = time.getHour();
         int minute = time.getMinute();
@@ -214,28 +252,27 @@ public class MyGdxGame extends ApplicationAdapter {
             writeDateInFile();
             return;
         }
-        String[]date = scanLine.split(" ");
+        String[] date = scanLine.split(" ");
 
         ZonedDateTime aDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, ZoneId.of("Europe/Sarajevo"));
-        ZonedDateTime otherDateTime = ZonedDateTime.of(Integer.parseInt(date[3]), Integer.parseInt(date[4]),  Integer.parseInt(date[5]),  Integer.parseInt(date[0]),  Integer.parseInt(date[1]),  Integer.parseInt(date[2]), 0, ZoneId.of("Europe/Sarajevo"));
+        ZonedDateTime otherDateTime = ZonedDateTime.of(Integer.parseInt(date[3]), Integer.parseInt(date[4]), Integer.parseInt(date[5]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]), 0, ZoneId.of("Europe/Sarajevo"));
 
         long diffSeconds = -ChronoUnit.SECONDS.between(aDateTime, otherDateTime);
-        StateChanger((int)diffSeconds,true);
+        StateChanger((int) diffSeconds, true);
     }
 
     @Override
     public void create() {
         FoodInit();
         StateLoad();
+        ReadLastRoom();
         getTimeAndChangeStatus();
-
         stateDrawer = new StateDrawer();
         scene_room = new Room();
         scene_kitchen = new Kitchen(food);
         scene_bedroom = new Bedroom();
-
-        ReadLastRoom();
         chooseRoom();
+
         Gdx.input.setInputProcessor(scene.getStage());
         Timer();
 
