@@ -237,6 +237,9 @@ public class Room implements Scene {
                         recorder.dispose();
                         flag_listen = false;
                         mouthAnimationFlag = true;
+                        for (int i = 0; i < data.length; i++) {
+                            data[i] *= 1.5f;
+                        }
                         player.writeSamples(data, 0, data.length);
                         mouthAnimationFlag = false;
                         player.dispose();
