@@ -120,7 +120,7 @@ public class MyGdxGame extends ApplicationAdapter {
                         WriteStateInFile();
                     }
                 } else {
-                    if (i % 10 == 0) {
+                    if (i % 120 == 0) {
                         if (sleep < 100) {
                             sleep++;
                             WriteStateInFile();

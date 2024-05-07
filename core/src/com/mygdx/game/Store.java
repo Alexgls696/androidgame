@@ -138,7 +138,7 @@ public class Store {
     private void InitButtons() //Инициализация и обработка действий кнопок при покупке
     {
         okImageButton.setSize(rectWidth/4, rectWidth/4);
-        okImageButton.setPosition(rectX+rectWidth-okImageButton.getWidth()-50, rectY+50);
+        okImageButton.setPosition(rectX+rectWidth-okImageButton.getWidth()-100, rectY+50);
         okImageButton.getImage().setFillParent(true);
         noImageButton.setSize(rectWidth/4, rectWidth/4);
         noImageButton.setPosition(rectX+50, rectY+50);
