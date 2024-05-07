@@ -13,7 +13,7 @@ import com.badlogic.gdx.audio.Sound;
 
 public class Bedroom implements Scene{
     private SpriteBatch batch;
-    private Texture img_day;
+    private Texture img_day; //sfdsfsfdfs
 
     private Texture img_night;
     ImageButton imageButtonDay;
