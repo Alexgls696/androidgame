@@ -34,8 +34,9 @@ public class MainTable {
                 if(!Room.isSoundDetected) {
                     switch (name) {
                         case "games":
-                            //MyGdxGame.scene = MyGdxGame.scene_games;
-                            //Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
+                            MyGdxGame.scene = MyGdxGame.scene_games;
+                            Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
+                            MyGdxGame.night_flag=false;
                             break;
                         case "room":
                             MyGdxGame.night_flag=false;

@@ -4,6 +4,9 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.game.Food.Food;
+import com.mygdx.game.Games.DinoGame;
+import com.mygdx.game.Games.FlappyBird;
+import com.mygdx.game.Games.Gym;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,6 +25,9 @@ public class MyGdxGame extends ApplicationAdapter {
     public static Scene scene_room;
     public static Scene scene_kitchen;
     public static Scene scene_bedroom;
+    public static Scene flappy_bird;
+    public static Scene dino_game;
+    public static Scene gym;
     public static StateDrawer stateDrawer;
     public static boolean changeTableFlag = true;
     public static boolean night_flag = false;
@@ -271,6 +277,10 @@ public class MyGdxGame extends ApplicationAdapter {
         scene_room = new Room();
         scene_kitchen = new Kitchen(food);
         scene_bedroom = new Bedroom();
+        scene_games = new Game();
+        flappy_bird = new FlappyBird();
+        dino_game = new DinoGame();
+        gym = new Gym();
         chooseRoom();
 
         Gdx.input.setInputProcessor(scene.getStage());
