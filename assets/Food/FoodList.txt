@@ -1,5 +1,5 @@
-Берн cost=99 healthBonus=3 sleepBonus=-30 musclesBonus=0 count=1 path=Burn.png
-Ягуар cost=49 healthBonus=3 sleepBonus=-15 musclesBonus=0 count=0 path=Jaguar.png
+Берн cost=99 healthBonus=-1 sleepBonus=-30 musclesBonus=0 count=1 path=Burn.png
+Ягуар cost=49 healthBonus=-3 sleepBonus=-15 musclesBonus=0 count=0 path=Jaguar.png
 Пельмени cost=250 healthBonus=25 sleepBonus=10 musclesBonus=-5 count=1 path=Pelm.png
 Протеин cost=449 healthBonus=15 sleepBonus=5 musclesBonus=20 count=0 path=Protein.png
 Творог cost=120 healthBonus=13 sleepBonus=12 musclesBonus=10 count=1 path=Tvorog.png

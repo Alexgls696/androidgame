@@ -85,7 +85,6 @@ public class Store {
                 new TextureRegionDrawable(new Texture("Scenes/Store/ok.png")));
         noImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
                 new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
-
         //Инициализация кнопки назад
         backImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
                 new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
@@ -104,15 +103,15 @@ public class Store {
     private void FoodTableInit() {
         int maxCount = 4;
         foodTable = new Table();
-        int width = Gdx.graphics.getWidth() /maxCount;
-        int height = width;
-        int bottom = Gdx.graphics.getWidth()/5;
-        foodTable.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2-10);
+        float width = Gdx.graphics.getHeight() /maxCount/2.5f;
+        float height = width;
+        float bottom = Gdx.graphics.getHeight()/9f;
+        foodTable.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2-20);
         int counter = 1;
         for (Food it : food.values()) {
             Image image = new Image(it.texture);
             image.setName(it.name);
-            foodTable.add(image).width(width).height(height).spaceBottom(bottom).padRight(10);
+            foodTable.add(image).width(width).height(height).spaceBottom(bottom);
             if (counter % maxCount == 0) {
                 foodTable.add().row();
             }
@@ -160,7 +159,7 @@ public class Store {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 long current_time = System.currentTimeMillis();
-                if(current_time-timer>500) {
+                if(current_time-timer>250) {
                     timer = System.currentTimeMillis();
                     Food current_food = food.get(buyingName);
                     if (MyGdxGame.user_money - current_food.cost < 0) {
@@ -174,6 +173,7 @@ public class Store {
                         statusLine = "Успешная покупка";
                         statusFont.setColor(Color.GREEN);
                         added = true;
+                        MyGdxGame.changeTableFlag=true;
                         new Thread(()->{
                             FileHandle handle = Gdx.files.local("Food/FoodList.txt");
                             StringBuffer tmp = new StringBuffer();

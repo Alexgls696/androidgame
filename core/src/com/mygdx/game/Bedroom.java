@@ -35,80 +35,7 @@ public class Bedroom implements Scene{
         init_buttons();
     }
     private void init_buttons() {
-        ImageButton imageButtonGames = new ImageButton(new TextureRegionDrawable(new Texture("button_games.png")), new TextureRegionDrawable(new Texture("button_games.png")));
-        imageButtonGames.setPosition(210, 100);
-        imageButtonGames.getImage().setFillParent(true);
-
-        ImageButton imageButtonRoom = new ImageButton(new TextureRegionDrawable(new Texture("button_room.png")), new TextureRegionDrawable(new Texture("button_room.png")));
-        imageButtonRoom.setPosition(380, 100);
-        imageButtonRoom.getImage().setFillParent(true);
-
-        ImageButton imageButtonKitchen = new ImageButton(new TextureRegionDrawable(new Texture("button_kitchen.png")), new TextureRegionDrawable(new Texture("button_kitchen.png")));
-        imageButtonKitchen.setPosition(550, 100);
-        imageButtonKitchen.getImage().setFillParent(true);
-
-        ImageButton imageButtonBedroom = new ImageButton(new TextureRegionDrawable(new Texture("button_bedroom.png")), new TextureRegionDrawable(new Texture("button_bedroom.png")));
-        imageButtonBedroom.setPosition(720, 100);
-        imageButtonBedroom.getImage().setFillParent(true);
-
-        imageButtonGames.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                MyGdxGame.scene = MyGdxGame.scene_games;
-                Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-            }
-        });
-
-        imageButtonRoom.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                MyGdxGame.scene = MyGdxGame.scene_room;
-                Gdx.input.setInputProcessor(MyGdxGame.scene_room.getStage());
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-            }
-        });
-
-        imageButtonKitchen.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                MyGdxGame.scene = MyGdxGame.scene_kitchen;
-                Gdx.input.setInputProcessor(MyGdxGame.scene_kitchen.getStage());
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-            }
-        });
-
-        imageButtonBedroom.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-            }
-        });
-        stage.addActor(imageButtonGames);
-        stage.addActor(imageButtonRoom);
-        stage.addActor(imageButtonKitchen);
-        stage.addActor(imageButtonBedroom);
-
+        stage.addActor(new MainTable().getMainTable());
         if(!MyGdxGame.night_flag)
         {
             init_buttonDay();
@@ -204,14 +131,11 @@ public class Bedroom implements Scene{
         }
         stage.act();
         stage.draw();
+        MyGdxGame.stateDrawer.draw_states();
     }
 
     public void dispose() {
-        batch.dispose();
-        img_day.dispose();
-        img_night.dispose();
         stage.dispose();
-        sound.dispose();
     }
 
     public void action() {
