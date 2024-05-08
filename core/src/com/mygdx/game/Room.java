@@ -31,12 +31,13 @@ public class Room implements Scene {
     private Texture sport_texture2;
     private SpriteBatch warning_sprite;
     private Texture warning_texture;
+    private SpriteBatch hungry_sprite;
+    private Texture hungry_texture;
     private Stage stage;
     private boolean flag_thread = true;
     public static boolean isSoundDetected = false;
     private boolean flag_listen = false;
     private boolean flag_mistake=false;
-    private boolean flag_mistake_dop=true;
     SpriteBatch mouthSpriteBatch;
     TextureAtlas mouthTextureAtlas;
     Animation<Sprite> mouthAnimation;
@@ -59,6 +60,9 @@ public class Room implements Scene {
     private SpriteBatch hitBody_sprite;
     private Texture hitBody_texture;
     private boolean isHitBody=false;
+    private boolean flag_hungry=false;
+    float hungryStateTime = 0;
+    float warningStateTime = 0;
     public Room() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -79,6 +83,9 @@ public class Room implements Scene {
 
         warning_sprite = new SpriteBatch();
         warning_texture = new Texture("Scenes/Room/warning.png");
+
+        hungry_sprite = new SpriteBatch();
+        hungry_texture = new Texture("Scenes/Room/hungry.png");
 
         hitBody_sprite = new SpriteBatch();
         hitBody_texture = new Texture("Scenes/Room/hitBody.png");
@@ -111,6 +118,7 @@ public class Room implements Scene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!isSoundDetected && !flag_mistake && !isHit && isfall<4 && !isHitBody && MyGdxGame.hunger>10) isSoundDetected = true;
+                if(MyGdxGame.hunger<=10) flag_hungry=true;
                 super.clicked(event, x, y);
             }
         });
@@ -224,20 +232,25 @@ public class Room implements Scene {
         batch.end();
         sportikDraw();
         if (flag_mistake) {
+            warningStateTime += Gdx.graphics.getDeltaTime();
             warning_sprite.begin();
             warning_sprite.draw(warning_texture, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2+325);
             warning_sprite.end();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(2500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    flag_mistake=false;
-                }
-            }).start();
+            if(warningStateTime>2){
+                flag_mistake=false;
+                warningStateTime=0;
+            }
+        }
+        if(flag_hungry)
+        {
+            hungryStateTime += Gdx.graphics.getDeltaTime();
+            hungry_sprite.begin();
+            hungry_sprite.draw(hungry_texture, Gdx.graphics.getWidth()/2+75, Gdx.graphics.getHeight()/2+400);
+            hungry_sprite.end();
+            if(hungryStateTime>=1) {
+                flag_hungry=false;
+                hungryStateTime=0;
+            }
         }
         stage.draw();
     }
@@ -289,11 +302,7 @@ public class Room implements Scene {
                         player.dispose();
                     } catch (Exception ex) {
                         flag_listen = false;
-                        if(flag_mistake_dop)
-                        {
-                            flag_mistake_dop=false;
-                            flag_mistake=true;
-                        }
+                        flag_mistake=true;
                     }
                     flag_thread = true;
                     mouthStateTime = 0;

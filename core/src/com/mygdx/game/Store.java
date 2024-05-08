@@ -55,6 +55,7 @@ public class Store {
     private String statusLine = "";
     private SpriteBatch yourCountSprite;
     long timer; //Для отсеивания лишних нажатий
+    Label moneyLabel;
     public Store(HashMap<String, Food> foodHashMap) {
         timer=System.currentTimeMillis();
         food = foodHashMap;
@@ -89,7 +90,7 @@ public class Store {
         backImageButton = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Store/back.png")),
                 new TextureRegionDrawable(new Texture("Scenes/Store/back.png")));
         backImageButton.setSize(200, 200);
-        backImageButton.setPosition(50,Gdx.graphics.getHeight()-backImageButton.getHeight()-50);
+        backImageButton.setPosition(50,Gdx.graphics.getHeight()-backImageButton.getHeight()-100);
         backImageButton.getImage().setFillParent(true);
         backImageButton.addListener(new ClickListener(){
             @Override
@@ -170,6 +171,7 @@ public class Store {
                         food.remove(buyingName);
                         food.put(buyingName, current_food);
                         MyGdxGame.user_money -= current_food.cost;
+                        moneyLabel.setText("Ваш баланс : " + MyGdxGame.user_money+" дублей");
                         statusLine = "Успешная покупка";
                         statusFont.setColor(Color.GREEN);
                         added = true;
@@ -216,6 +218,7 @@ public class Store {
         Label healthLabel = new Label("Насыщение : " + healthBonus +" %", style);
         Label musclesLabel = new Label("Мышечная масса : " + muscleBonus+" %", style);
         Label sleepLabel = new Label("Сонливость : " + sleepBonus+" %", style);
+        moneyLabel = new Label("Ваш баланс : " + MyGdxGame.user_money+" дублей", style);
         Label questionLabel = new Label("Купить? ",style);
         int pad = 50;
         labelsTable.add(nameLabel).spaceBottom(pad).row();
@@ -223,6 +226,7 @@ public class Store {
         labelsTable.add(healthLabel).spaceBottom(pad).row();
         labelsTable.add(musclesLabel).spaceBottom(pad).row();
         labelsTable.add(sleepLabel).spaceBottom(200).row();
+        labelsTable.add(moneyLabel).spaceBottom(pad).row();
         labelsTable.add(questionLabel).spaceBottom(pad).row();
         labelsTable.setFillParent(true);
 
