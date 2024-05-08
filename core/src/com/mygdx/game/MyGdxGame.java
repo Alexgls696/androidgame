@@ -89,13 +89,12 @@ public class MyGdxGame extends ApplicationAdapter {
                     }
                 }
                 changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
-                WriteStateInFile(); //Запись измененных значений в файл
+
             }
             if (counter % 180 == 0 && !MyGdxGame.night_flag) {
                 if (muscleMass > 0) {
                     muscleMass--;
                     changeTableFlag = true;
-                    WriteStateInFile();
                 }
             }
             if (night_flag) {
@@ -103,7 +102,6 @@ public class MyGdxGame extends ApplicationAdapter {
                     if (sleep > 0) {
                         sleep--;
                         changeTableFlag = true;
-                        WriteStateInFile();
                     }
                 }
             } else {
@@ -115,7 +113,7 @@ public class MyGdxGame extends ApplicationAdapter {
                     }
                 }
             }
-
+            WriteStateInFile(); //Запись измененных значений в файл
         } else //Во время загрузки
         {
             for (int i = 1; i <= counter; i++) {
@@ -164,7 +162,7 @@ public class MyGdxGame extends ApplicationAdapter {
                     Thread.sleep(1000);
                     counter++;
                     StateChanger(counter, false);
-                    //new Thread(this::writeDateInFile).start(); // Перезапись времени
+                    new Thread(this::writeDateInFile).start(); // Перезапись времени
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -263,7 +261,7 @@ public class MyGdxGame extends ApplicationAdapter {
         String[] date = scanLine.split(" ");
 
         ZonedDateTime aDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, ZoneId.of("Europe/Sarajevo"));
-        ZonedDateTime otherDateTime = ZonedDateTime.of(Integer.parseInt(date[3]), Integer.parseInt(date[4]), Integer.parseInt(date[5]), Integer.parseInt(date[0]), Integer.parseInt(date[1])+2, Integer.parseInt(date[2]), 0, ZoneId.of("Europe/Sarajevo"));
+        ZonedDateTime otherDateTime = ZonedDateTime.of(Integer.parseInt(date[3]), Integer.parseInt(date[4]), Integer.parseInt(date[5]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]), 0, ZoneId.of("Europe/Sarajevo"));
 
         long diffSeconds = -ChronoUnit.SECONDS.between(aDateTime, otherDateTime);
         StateChanger((int) diffSeconds, true);

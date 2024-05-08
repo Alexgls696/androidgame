@@ -37,7 +37,6 @@ public class Store {
     private SpriteBatch buyingFoodSprite;
     private Texture buyingFoodTexture;
     private boolean buyWindowFlag = false;
-
     private ImageButton okImageButton;
     private ImageButton noImageButton;
     private ImageButton backImageButton;
