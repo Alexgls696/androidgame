@@ -110,7 +110,7 @@ public class Room implements Scene {
         imageButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!isSoundDetected && !flag_mistake && !isHit && isfall<4 && !isHitBody) isSoundDetected = true;
+                if (!isSoundDetected && !flag_mistake && !isHit && isfall<4 && !isHitBody && MyGdxGame.hunger>10) isSoundDetected = true;
                 super.clicked(event, x, y);
             }
         });
