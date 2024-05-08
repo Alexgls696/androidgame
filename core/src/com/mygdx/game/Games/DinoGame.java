@@ -5,6 +5,7 @@ import static com.mygdx.game.MyGdxGame.scene_games;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,6 +55,8 @@ public class DinoGame implements Scene {
     private String text = "Hello, World!";
     private Matrix4 oldTransformMatrix;
     Matrix4 mx4Font = new Matrix4();
+    private Music music_car;
+    private boolean music_start=false;
 
     public DinoGame(){
         mx4Font.rotate(new Vector3(0, 0, 1), angle);
@@ -92,6 +95,7 @@ public class DinoGame implements Scene {
                     dinoVelocity = 23;
                     dinoX += dinoVelocity;
                 } else if (rect.contains(screenX, screenY) && is_end){
+                    music_start=false;
                     MyGdxGame.user_money += score;
                     score = 0;
                     speed = 10;
@@ -102,6 +106,7 @@ public class DinoGame implements Scene {
                     isJump = false;
                     is_end = false;
                 } else if (rect1.contains(screenX, screenY) && is_end){
+                    music_start=false;
                     MyGdxGame.user_money += score;
                     score = 0;
                     speed = 10;
@@ -121,10 +126,17 @@ public class DinoGame implements Scene {
                 return true;
             }
         });
+        music_car = Gdx.audio.newMusic(Gdx.files.internal("DinoGame/music_car.mp3"));
+        music_car.setLooping(true);
+        music_car.setVolume(10);
     }
 
     @Override
     public void draw() {
+        if(!music_start){
+            music_start=true;
+            music_car.play();
+        }
         speed += 0.001f;
         batch.begin();
         batch.draw(background, 0,0);
@@ -175,6 +187,7 @@ public class DinoGame implements Scene {
             for (int i = 0; i < cactus_list.size(); i++){
                 batch.draw(cactus, 120, cactus_list.get(i));
             }
+            music_car.stop();
             batch.draw(Dino, dinoX, 1800);
             batch.draw(menu, (Gdx.graphics.getWidth() - menu.getWidth()) /2f, (Gdx.graphics.getHeight() - menu.getHeight()) /2f);
             batch.draw(bottom, 0,bottomY);
@@ -185,7 +198,6 @@ public class DinoGame implements Scene {
             font.draw(batch,String.valueOf(score),-(Gdx.graphics.getWidth()) /2f - 660,700,0.5f, 1,false);
             batch.setTransformMatrix(oldTransformMatrix);
         }
-
         batch.end();
     }
 

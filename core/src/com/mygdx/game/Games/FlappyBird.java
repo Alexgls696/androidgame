@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,8 @@ public class FlappyBird implements Scene {
     boolean end_game;
     Texture button_exit;
     Texture button_restart;
+    private Music music_plane;
+    private boolean music_start=false;
 
 
     public FlappyBird(){
@@ -98,6 +102,7 @@ public class FlappyBird implements Scene {
                 Rectangle rect = new Rectangle(325, 1070, button_restart.getWidth(), button_restart.getHeight() + 60);
                 Rectangle rect1 = new Rectangle(325, 1250, button_restart.getWidth(), button_restart.getHeight() + 60);
                 if ((rect.contains(screenX, screenY)) && (end_game)){
+                    music_start=false;
                     MyGdxGame.user_money += score;
                     end_game = false;
                     barrelY = 1100;
@@ -114,6 +119,7 @@ public class FlappyBird implements Scene {
                     MyGdxGame.changeTableFlag=true;
                     MyGdxGame.WriteStateInFile();
                 } else if ((rect1.contains(screenX, screenY)) && (end_game)){
+                    music_start=false;
                     MyGdxGame.user_money += score;
                     end_game = false;
                     barrelY = 1100;
@@ -139,10 +145,17 @@ public class FlappyBird implements Scene {
                 return true;
             }
         });
+        music_plane = Gdx.audio.newMusic(Gdx.files.internal("FlappyBird/music_plane.mp3"));
+        music_plane.setLooping(true);
+        music_plane.setVolume(10);
     }
 
     @Override
     public void draw() {
+        if(!music_start){
+            music_start=true;
+            music_plane.play();
+        }
         batch.begin();
         batch.draw(background,0,0);
         if (!end_game){
@@ -203,6 +216,7 @@ public class FlappyBird implements Scene {
                 barrelVelocity += gravity;
                 barrelY += barrelVelocity;
             }
+            music_plane.stop();
             float alpha = barrelVelocity < 0 ? barrelVelocity / 50f * 90 : 15;
             batch.draw(barrel_tr,100, barrelY, barrel.getWidth() / 2, barrel.getHeight() / 2, barrel.getWidth(), barrel.getHeight(), 1, 1, alpha);
             batch.draw(bottom, bottomX, 0);

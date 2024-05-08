@@ -25,6 +25,10 @@ public class Gym implements Scene {
     Texture hand_down;
     Texture hand_up;
     Texture button_exit;
+    boolean flag_start=true;
+    private float muscleChange;
+    float gymTime;
+    int muscleMass;
     @Override
     public void create() { // Тест 4
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -32,9 +36,12 @@ public class Gym implements Scene {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Rectangle rect = new Rectangle(Gdx.graphics.getWidth() - button_exit.getWidth() - 50, 50, button_exit.getWidth(), button_exit.getHeight());
                 if (rect.contains(screenX, screenY)){
+                    flag_start=true;
+                    MyGdxGame.muscleMass=muscleMass;
                     MyGdxGame.scene= scene_games;
                     Gdx.input.setInputProcessor(MyGdxGame.scene_games.getStage());
                     choice_game = -1;
+                    MyGdxGame.changeTableFlag=true;
                 }
                 return true;
             }
@@ -43,16 +50,29 @@ public class Gym implements Scene {
 
     @Override
     public void draw() {
+        if(flag_start)
+        {
+            float muscleChange=0;
+            float gymTime = 0;
+            int muscleMass=MyGdxGame.muscleMass;
+            flag_start=false;
+        }
         batch.begin();
         float accelerometerValue = Gdx.input.getAccelerometerX();
         if (accelerometerValue < -5) {
+            gymTime += Gdx.graphics.getDeltaTime();
             batch.draw(hand_up, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            if(gymTime<0.1) muscleChange+=0.1;
         } else {
+            gymTime=0;
             batch.draw(hand_down, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
+        if(muscleMass<100 && muscleChange>=5) {
+            muscleChange = 0;
+            muscleMass+=1;
         }
         batch.draw(button_exit,Gdx.graphics.getWidth() - button_exit.getWidth() - 50,Gdx.graphics.getHeight() - button_exit.getHeight() - 50);
         batch.end();
-
     }
 
     @Override

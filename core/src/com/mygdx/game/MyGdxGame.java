@@ -91,7 +91,7 @@ public class MyGdxGame extends ApplicationAdapter {
                 changeTableFlag = true; //Флаг для изменения отображения (static и проверяется внутри класса StateDrawer;
                 WriteStateInFile(); //Запись измененных значений в файл
             }
-            if (counter % 180 == 0) {
+            if (counter % 180 == 0 && !MyGdxGame.night_flag) {
                 if (muscleMass > 0) {
                     muscleMass--;
                     changeTableFlag = true;

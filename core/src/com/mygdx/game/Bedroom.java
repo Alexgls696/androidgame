@@ -20,7 +20,6 @@ public class Bedroom implements Scene{
     ImageButton imageButtonNight;
     private Stage stage;
     public static boolean change_time=false;
-    public static boolean change_out=false;
     Sound sound;
     public Bedroom(){
         create();
@@ -48,7 +47,7 @@ public class Bedroom implements Scene{
 
     private void init_buttonDay(){
         imageButtonDay = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Bedroom/button_day.png")), new TextureRegionDrawable(new Texture("Scenes/Bedroom/button_day.png")));
-        imageButtonDay.setPosition(450, 850);
+        imageButtonDay.setPosition((int)(450*Gdx.graphics.getWidth() / 1080),(int)(850*Gdx.graphics.getHeight() / 2340));
         imageButtonDay.getImage().setFillParent(true);
         imageButtonDay.addListener(new InputListener() {
             @Override
@@ -68,7 +67,7 @@ public class Bedroom implements Scene{
 
     private void init_buttonNight(){
         imageButtonNight = new ImageButton(new TextureRegionDrawable(new Texture("Scenes/Bedroom/button_night.png")), new TextureRegionDrawable(new Texture("Scenes/Bedroom/button_night.png")));
-        imageButtonNight.setPosition(450, 780);
+        imageButtonNight.setPosition((int)(450*Gdx.graphics.getWidth() / 1080),(int)(780*Gdx.graphics.getHeight() / 2340));
         imageButtonNight.getImage().setFillParent(true);
         imageButtonNight.addListener(new InputListener() {
             @Override

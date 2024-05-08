@@ -1,0 +1,54 @@
+headHit.png
+size: 1499, 1252
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+head
+  rotate: false
+  xy: 759, 1
+  size: 369, 1250
+  orig: 369, 1250
+  offset: 0, 0
+  index: 0
+head
+  rotate: false
+  xy: 381, 1
+  size: 376, 1250
+  orig: 377, 1250
+  offset: 0, 0
+  index: 1
+head
+  rotate: false
+  xy: 1, 1
+  size: 378, 1250
+  orig: 378, 1250
+  offset: 0, 0
+  index: 2
+head
+  rotate: false
+  xy: 1130, 1
+  size: 368, 1250
+  orig: 368, 1250
+  offset: 0, 0
+  index: 3
+head
+  rotate: false
+  xy: 1, 1
+  size: 378, 1250
+  orig: 378, 1250
+  offset: 0, 0
+  index: 4
+head
+  rotate: false
+  xy: 381, 1
+  size: 376, 1250
+  orig: 377, 1250
+  offset: 0, 0
+  index: 5
+head
+  rotate: false
+  xy: 759, 1
+  size: 369, 1250
+  orig: 369, 1250
+  offset: 0, 0
+  index: 6
