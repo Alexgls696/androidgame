@@ -60,6 +60,10 @@ public class FlappyBird implements Scene {
     Texture button_restart;
     private Music music_plane;
     private boolean music_start=false;
+    Sound sound_hit;
+    Sound sound_point;
+    boolean flag_hit=false;
+    int score_old=0;
 
 
     public FlappyBird(){
@@ -103,6 +107,8 @@ public class FlappyBird implements Scene {
                 Rectangle rect1 = new Rectangle(325, 1250, button_restart.getWidth(), button_restart.getHeight() + 60);
                 if ((rect.contains(screenX, screenY)) && (end_game)){
                     music_start=false;
+                    flag_hit=false;
+                    score_old=0;
                     MyGdxGame.user_money += score;
                     end_game = false;
                     barrelY = 1100;
@@ -120,6 +126,8 @@ public class FlappyBird implements Scene {
                     MyGdxGame.WriteStateInFile();
                 } else if ((rect1.contains(screenX, screenY)) && (end_game)){
                     music_start=false;
+                    flag_hit=false;
+                    score_old=0;
                     MyGdxGame.user_money += score;
                     end_game = false;
                     barrelY = 1100;
@@ -148,6 +156,8 @@ public class FlappyBird implements Scene {
         music_plane = Gdx.audio.newMusic(Gdx.files.internal("FlappyBird/music_plane.mp3"));
         music_plane.setLooping(true);
         music_plane.setVolume(10);
+        sound_point = Gdx.audio.newSound(Gdx.files.internal("FlappyBird/Point.mp3"));
+        sound_hit = Gdx.audio.newSound(Gdx.files.internal("FlappyBird/Hit.mp3"));
     }
 
     @Override
@@ -170,6 +180,10 @@ public class FlappyBird implements Scene {
                     if (columnX.get(i) < Gdx.graphics.getWidth() / 2 - column_top.getWidth()) {
                         score++;
                     }
+                }
+                if(score_old!=score){
+                    score_old=score;
+                    sound_point.play();
                 }
                 if (Gdx.graphics.getWidth() - columnX.get(columnX.size() - 1) > distance_column) {
                     columnX.add(Gdx.graphics.getWidth());
@@ -217,6 +231,10 @@ public class FlappyBird implements Scene {
                 barrelY += barrelVelocity;
             }
             music_plane.stop();
+            if(!flag_hit){
+                sound_hit.play();
+                flag_hit=true;
+            }
             float alpha = barrelVelocity < 0 ? barrelVelocity / 50f * 90 : 15;
             batch.draw(barrel_tr,100, barrelY, barrel.getWidth() / 2, barrel.getHeight() / 2, barrel.getWidth(), barrel.getHeight(), 1, 1, alpha);
             batch.draw(bottom, bottomX, 0);

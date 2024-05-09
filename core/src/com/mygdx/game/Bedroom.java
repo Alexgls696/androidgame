@@ -118,7 +118,7 @@ public class Bedroom implements Scene{
                         soundFlag = false;
                         sound.play();
                         try {
-                            Thread.sleep(2500);
+                            Thread.sleep(2000);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }

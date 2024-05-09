@@ -6,6 +6,7 @@ import static com.mygdx.game.MyGdxGame.scene_games;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -39,8 +40,12 @@ public class Game implements Scene{
     Rectangle rectangle;
     static public int choice_game;
     private Stage stage;
+    private boolean flag_sleep=false;
+    float sleepStateTime = 0;
+    private SpriteBatch sleep_sprite;
+    private Texture sleep_texture;
     BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
-    private void init_buttons() {
+    /*private void init_buttons() {
         ImageButton imageButtonGames = new ImageButton(new TextureRegionDrawable(new Texture("button_games.png")), new TextureRegionDrawable(new Texture("button_games.png")));
         imageButtonGames.setPosition(210, 100);
         imageButtonGames.getImage().setFillParent(true);
@@ -114,7 +119,7 @@ public class Game implements Scene{
         stage.addActor(imageButtonRoom);
         stage.addActor(imageButtonKitchen);
         stage.addActor(imageButtonBedroom);
-    }
+    }*/
     @Override
     public void create() {
         stage = new Stage(new ScreenViewport());
@@ -129,15 +134,21 @@ public class Game implements Scene{
         batch = new SpriteBatch();
         choice_game = -1;
         stage.addActor(new MainTable().getMainTable());
+        sleep_sprite = new SpriteBatch();
+        sleep_texture = new Texture("Game/message_sleep.png");
         //init_buttons();
         ImageButton flappyBirdButton = new ImageButton(new TextureRegionDrawable(new Texture("Game/FlappyBird_icon.png")), new TextureRegionDrawable(new Texture("Game/FlappyBird_icon.png")));
         flappyBirdButton.setPosition(Gdx.graphics.getWidth() * 0.18f, Gdx.graphics.getHeight() - flappyBirdButton.getHeight() - 400);
         flappyBirdButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                choice_game = 0;
-                MyGdxGame.scene= flappyBird;
-                games.get(choice_game).create();
+                if(MyGdxGame.sleep<90){
+                    choice_game = 0;
+                    MyGdxGame.scene= flappyBird;
+                    games.get(choice_game).create();
+                }else {
+                    flag_sleep=true;
+                }
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -146,9 +157,13 @@ public class Game implements Scene{
         dinoGameButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                choice_game = 1;
-                MyGdxGame.scene= dino_game;
-                dino_game.create();
+                if(MyGdxGame.sleep<90){
+                    choice_game = 1;
+                    MyGdxGame.scene= dino_game;
+                    dino_game.create();
+                }else {
+                    flag_sleep=true;
+                }
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -157,9 +172,13 @@ public class Game implements Scene{
         gymButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                choice_game = 2;
-                MyGdxGame.scene= gym;
-                gym.create();
+                if(MyGdxGame.sleep<90){
+                    choice_game = 2;
+                    MyGdxGame.scene= gym;
+                    gym.create();
+                }else{
+                    flag_sleep=true;
+                }
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -173,6 +192,8 @@ public class Game implements Scene{
     public void draw() {
         batch.begin();
         if (choice_game == -1){
+            Gdx.gl.glClearColor(0, 0, 0, 0);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.draw(games_background, 0 ,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
         batch.end();
@@ -180,7 +201,17 @@ public class Game implements Scene{
             stage.act();
             stage.draw();
         }
-
+        if(flag_sleep)
+        {
+            sleepStateTime += Gdx.graphics.getDeltaTime();
+            sleep_sprite.begin();
+            sleep_sprite.draw(sleep_texture, Gdx.graphics.getWidth()/2-400, Gdx.graphics.getHeight()/2+650);
+            sleep_sprite.end();
+            if(sleepStateTime>=1) {
+                flag_sleep=false;
+                sleepStateTime=0;
+            }
+        }
     }
 
     @Override

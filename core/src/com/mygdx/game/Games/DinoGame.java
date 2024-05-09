@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scene;
+import com.badlogic.gdx.audio.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,8 @@ public class DinoGame implements Scene {
     Matrix4 mx4Font = new Matrix4();
     private Music music_car;
     private boolean music_start=false;
+    Sound sound_end;
+    boolean flag_end=false;
 
     public DinoGame(){
         mx4Font.rotate(new Vector3(0, 0, 1), angle);
@@ -96,6 +99,7 @@ public class DinoGame implements Scene {
                     dinoX += dinoVelocity;
                 } else if (rect.contains(screenX, screenY) && is_end){
                     music_start=false;
+                    flag_end=false;
                     MyGdxGame.user_money += score;
                     score = 0;
                     speed = 10;
@@ -107,6 +111,7 @@ public class DinoGame implements Scene {
                     is_end = false;
                 } else if (rect1.contains(screenX, screenY) && is_end){
                     music_start=false;
+                    flag_end=false;
                     MyGdxGame.user_money += score;
                     score = 0;
                     speed = 10;
@@ -129,6 +134,7 @@ public class DinoGame implements Scene {
         music_car = Gdx.audio.newMusic(Gdx.files.internal("DinoGame/music_car.mp3"));
         music_car.setLooping(true);
         music_car.setVolume(10);
+        sound_end = Gdx.audio.newSound(Gdx.files.internal("DinoGame/sound_endCar.mp3"));
     }
 
     @Override
@@ -188,6 +194,10 @@ public class DinoGame implements Scene {
                 batch.draw(cactus, 120, cactus_list.get(i));
             }
             music_car.stop();
+            if(!flag_end){
+                sound_end.play();
+                flag_end=true;
+            }
             batch.draw(Dino, dinoX, 1800);
             batch.draw(menu, (Gdx.graphics.getWidth() - menu.getWidth()) /2f, (Gdx.graphics.getHeight() - menu.getHeight()) /2f);
             batch.draw(bottom, 0,bottomY);
