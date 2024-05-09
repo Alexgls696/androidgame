@@ -187,7 +187,6 @@ public class MyGdxGame extends ApplicationAdapter {
         int year = time.getYear();
         int month = time.getMonthValue();
         int day = time.getDayOfMonth();
-
         new Thread(() -> {
             FileHandle handle = Gdx.files.local("State/date.txt");
             String writeLine = hour + " " + minute + " " + second + " " + year + " " + month + " " + day;
