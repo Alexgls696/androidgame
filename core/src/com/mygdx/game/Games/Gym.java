@@ -30,10 +30,9 @@ public class Gym implements Scene {
     Texture hand_up;
     Texture hand_center;
     Texture button_exit;
-    boolean flag_start=true;
-    private float muscleChange;
-    float gymTime;
-    int muscleMass;
+    boolean flag_start=false;
+    float muscleChange=0;
+    float gymTime = 0;
     Label muscleLabel;
     BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
     @Override
@@ -64,9 +63,8 @@ public class Gym implements Scene {
     public void draw() {
         if(flag_start)
         {
-            float muscleChange=0;
-            float gymTime = 0;
-            int muscleMass=MyGdxGame.muscleMass;
+            muscleChange=0;
+            gymTime = 0;
             flag_start=false;
         }
         batch.begin();
@@ -82,10 +80,9 @@ public class Gym implements Scene {
             gymTime=0;
             batch.draw(hand_down, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
-        if(muscleMass<100 && muscleChange>=5) {
+        if(MyGdxGame.muscleMass<100 && muscleChange>=5) {
             muscleChange = 0;
-            muscleMass+=1;
-            MyGdxGame.muscleMass=muscleMass;
+            MyGdxGame.muscleMass+=1;
             muscleLabel.setText("Мышечная масса: " + MyGdxGame.muscleMass+" %");
         }
         batch.draw(button_exit,Gdx.graphics.getWidth() - button_exit.getWidth() - 50,Gdx.graphics.getHeight() - button_exit.getHeight() - 50);
