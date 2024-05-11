@@ -34,6 +34,8 @@ public class Gym implements Scene {
     float muscleChange=0;
     float gymTime = 0;
     Label muscleLabel;
+    private float coefficientX = Gdx.graphics.getWidth() / 1080f;
+    private float coefficientY = Gdx.graphics.getHeight() / 2400f;
     BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
     @Override
     public void create() { // Тест 4
@@ -85,7 +87,7 @@ public class Gym implements Scene {
             MyGdxGame.muscleMass+=1;
             muscleLabel.setText("Мышечная масса: " + MyGdxGame.muscleMass+" %");
         }
-        batch.draw(button_exit,Gdx.graphics.getWidth() - button_exit.getWidth() - 50,Gdx.graphics.getHeight() - button_exit.getHeight() - 50);
+        batch.draw(button_exit,(1080 - button_exit.getWidth() - 50) * coefficientX,(2400 - button_exit.getHeight() - 50) * coefficientY, button_exit.getWidth() * coefficientX, button_exit.getHeight() * coefficientY);
         muscleLabel.draw(batch,1);
         batch.end();
     }
