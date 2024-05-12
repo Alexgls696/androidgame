@@ -72,13 +72,13 @@ public class Game implements Scene{
         flappyBirdButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//                if(MyGdxGame.sleep<90){
+                if(MyGdxGame.sleep<90){
                     choice_game = 0;
                     MyGdxGame.scene= flappyBird;
                     games.get(choice_game).create();
-//                }else {
-//                    flag_sleep=true;
-//                }
+                }else {
+                    flag_sleep=true;
+                }
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -88,13 +88,13 @@ public class Game implements Scene{
         dinoGameButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//                if(MyGdxGame.sleep<90){
+                if(MyGdxGame.sleep<90){
                     choice_game = 1;
                     MyGdxGame.scene= dino_game;
                     dino_game.create();
-//                }else {
-//                    flag_sleep=true;
-//                }
+                }else {
+                    flag_sleep=true;
+                }
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -104,13 +104,13 @@ public class Game implements Scene{
         gymButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//                if(MyGdxGame.sleep<90){
+                if(MyGdxGame.sleep<90){
                     choice_game = 2;
                     MyGdxGame.scene= gym;
                     gym.create();
-//                }else{
-//                    flag_sleep=true;
-//                }
+                }else{
+                    flag_sleep=true;
+                }
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -133,17 +133,17 @@ public class Game implements Scene{
             stage.act();
             stage.draw();
         }
-//        if(flag_sleep)
-//        {
-//            sleepStateTime += Gdx.graphics.getDeltaTime();
-//            sleep_sprite.begin();
-//            sleep_sprite.draw(sleep_texture, Gdx.graphics.getWidth()/2-400, Gdx.graphics.getHeight()/2+650);
-//            sleep_sprite.end();
-//            if(sleepStateTime>=1) {
-//                flag_sleep=false;
-//                sleepStateTime=0;
-//            }
-//        }
+        if(flag_sleep)
+        {
+            sleepStateTime += Gdx.graphics.getDeltaTime();
+            sleep_sprite.begin();
+            sleep_sprite.draw(sleep_texture, Gdx.graphics.getWidth()/2-400, Gdx.graphics.getHeight()/2+650);
+            sleep_sprite.end();
+            if(sleepStateTime>=1) {
+                flag_sleep=false;
+                sleepStateTime=0;
+            }
+        }
     }
 
     @Override
